@@ -1,5 +1,5 @@
 [project]
-name = "agent_finance"
+name = "finance_agent"
 version = "0.1.0"
 description = "Turn AI agents into your personal financial assistant"
 readme = "README.md"
