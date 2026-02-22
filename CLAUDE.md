@@ -34,19 +34,23 @@ Mode can switch at any time based on the user's changing circumstances.
 
 On first interaction (or when `data/` files don't exist), run the `/onboard` skill to collect the user's financial data and create the initial JSON files.
 
+## Environment Setup
+
+Before any calculations or `mtool` usage, ensure the project venv is ready by running `uv sync`. Use `.venv/bin/mtool` for ticker/exchange rate lookups and `.venv/bin/python` for any math or date computations.
+
 ## Data Persistence
 
 All financial data is stored as JSON files in the `data/` directory.
 
 ### File Structure
 
-| File                           | Contents                                                   |
-| ------------------------------ | ---------------------------------------------------------- |
-| `data/profile.json`            | Currency, active mode, enabled features, preferences       |
-| `data/accounts.json`           | Savings accounts, investment accounts, cash holdings       |
-| `data/liabilities.json`        | Insurance, subscriptions, loans, recurring deductions      |
-| `data/cashflow.json`           | Income streams, regular expenses, investment allocations   |
-| `data/goals.json`              | Financial goals with targets and deadlines                 |
+| File                    | Contents                                                 |
+| ----------------------- | -------------------------------------------------------- |
+| `data/profile.json`     | Currency, active mode, enabled features, preferences     |
+| `data/accounts.json`    | Savings accounts, investment accounts, cash holdings     |
+| `data/liabilities.json` | Insurance, subscriptions, loans, recurring deductions    |
+| `data/cashflow.json`    | Income streams, regular expenses, investment allocations |
+| `data/goals.json`       | Financial goals with targets and deadlines               |
 
 ### Investment Account Formats
 
@@ -70,7 +74,7 @@ Investment accounts support two formats — let the user choose, but suggest uni
 { "name": "Brokerage", "balance": 50000 }
 ```
 
-When a user adds an investment account, let them know that storing ticker + units allows automatic balance lookups, but don't force it. For units-based accounts, compute balance as `units × current price` by fetching from `mtool ticker`.
+When a user adds an investment account, let them know that storing ticker + units allows automatic balance lookups, but don't force it. For units-based accounts, compute balance as `units × current price` by fetching from `mtool ticker`. Tickers must use Yahoo Finance format — when a user provides a short ticker, look up the correct Yahoo Finance symbol before storing it.
 
 ### Data Rules
 
@@ -100,7 +104,8 @@ When a user adds an investment account, let them know that storing ticker + unit
 ### Liability Tracker
 
 - Track all recurring deductions: subscriptions, insurance, loans
-- Each liability includes: name, amount, frequency, next due date, category
+- Each liability includes: name, amount, frequency, due day (and due month for yearly items), category
+- Do not store fixed `next_due` dates — store `due_day` (1-31) and optionally `due_month` (1-12), then compute the next due date dynamically from today's date
 - Summarize **total monthly liability burden** (normalize all frequencies to monthly)
 - If the user wants, you can alert when a payment is upcoming
 
