@@ -1,0 +1,6 @@
+# app data
+data/
+
+# dev
+__pycache__
+.venv
