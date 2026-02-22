@@ -5,6 +5,7 @@ description = "Turn AI agents into your personal financial assistant"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "matplotlib>=3.10.0",
     "typer>=0.24.0",
     "yfinance>=1.2.0",
 ]
