@@ -70,17 +70,17 @@ Ask about financial goals:
 
 ## Onboarding Guidelines
 
-- **Use AskUserQuestion for all questions** — ALWAYS use the `AskUserQuestion` tool to collect user input. Never just print a question as text and wait for the user to type in the prompt. This provides a structured UI with clickable options for a better experience.
-  - For questions with predefined choices (currency, mode, add-ons, liquidity tiers, yes/no confirmations), use `AskUserQuestion` with appropriate `options`.
-  - For freeform data (account names, balances, expenses, goal details), just ask normally as text — no need to use `AskUserQuestion`.
-  - Use `multiSelect: true` when the user can pick multiple items (e.g., add-on selection, account types they have).
-  - Group related questions together — you can ask up to 4 questions in a single `AskUserQuestion` call.
+- **Use AskUserQuestion only for structured choices** — use `AskUserQuestion` for questions with predefined options (currency, mode, add-ons, liquidity tiers, yes/no confirmations, pace preference). Do NOT use it for freeform data collection (account names, balances, expenses, goal details, liabilities) — just ask in plain text and parse the user's natural input.
+  - Use `multiSelect: true` when the user can pick multiple items (e.g., add-on selection).
+  - Group related choice questions together — you can ask up to 4 questions in a single `AskUserQuestion` call.
 - **Adaptive pace** — ask the user if they want to provide everything at once or go through it step by step. Follow their preferred style.
 - **Accept freeform input** — don't suggest or enforce a specific format. Parse whatever the user types naturally and confirm back what was understood.
 - **Running tally** — when collecting data across multiple messages, periodically show what's been collected so far so the user can spot mistakes early.
-- **Ask for missing fields** — don't silently accept empty values for important fields (e.g., `next_due` dates on liabilities). Prompt for them, but let the user skip if they don't know.
+- **Ask for missing fields** — don't silently accept empty values for important fields (e.g., `due_day` on liabilities). Prompt for them, but let the user skip if they don't know.
 - **Don't overwhelm** — if the user has few accounts and no add-ons, keep it brief. Only ask add-on-specific questions for enabled add-ons.
 - **Confirmation before persisting** — after all data is collected, show a full summary and get explicit confirmation (via `AskUserQuestion`) before writing any JSON files.
+- **Set up project dependencies** — at the start of onboarding, run `uv sync` to ensure the Python virtual environment and project dependencies (including `mtool`) are installed. Then use `.venv/bin/mtool` (or activate the venv first) for any `mtool` commands. Don't wait until the user asks for a calculation to discover the environment isn't set up.
+- **Show progress** — at each step, indicate where the user is in the flow (e.g., "Step 3 of 7: Accounts"). This helps the user know how much is left and prevents the onboarding from feeling endless.
 
 ## Data Files
 
@@ -161,13 +161,16 @@ Note: Investment accounts support two formats — **units-based** (`holdings` wi
       "amount": 0,
       "currency": "",
       "frequency": "monthly|quarterly|yearly",
-      "next_due": "YYYY-MM-DD",
+      "due_day": 1,
+      "due_month": 1,
       "category": "subscription|insurance|loan|other",
       "notes": ""
     }
   ]
 }
 ```
+
+Note: Do not store fixed `next_due` dates. Instead, store `due_day` (1-31) for monthly/quarterly items, and `due_day` + `due_month` (1-12) for yearly items. Compute `next_due` dynamically from today's date at read time. `due_month` is only needed for yearly frequency — omit it for monthly/quarterly.
 
 **cashflow.json**
 
