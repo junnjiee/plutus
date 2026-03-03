@@ -12,19 +12,19 @@ Finance apps make you fit their boxes. Fixed categories, manual updates, rigid w
 
 Fetch live prices, run calculations, ask for advice, create custom visualizations, and more.
 
-I developed this to work seamlessly in [Claude Code](https://docs.anthropic.com/en/docs/claude-code), but you can use other agent harnesses/models such as Codex or Opencode.
-
-## Privacy First
-
-All data stays on your machine in `data/`. Nothing leaves your laptop.
+Works with any agentic coding harness: [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Codex](https://openai.com/codex/), [Opencode](https://opencode.ai/), and more.
 
 ## What It Does
 
 - **Net worth tracking** with live portfolio pricing and multi-currency support
 - **Runway projections** — simulate how long you can live off your savings/investments
-- **Savings rate** and **liability tracking** computed from your actual data
+- **Savings rate** and **liability/subscriptions tracking** computed from your actual data
 - **Financial goals** with progress tracking and required contribution calculations
 - **Modular add-ons** — liquidity tiers, tax-advantaged flags, asset class tags, currency exposure
+
+### Don't see a feature you need?
+
+Use your coding agent to create it! The goal of this app is to allow personal finance to finally be _personal_ and fit the needs of every individual.
 
 ## Get Started
 
@@ -33,11 +33,15 @@ git clone <repo-url> && cd finance-agent
 uv sync
 ```
 
-Open Claude Code in the project directory and `/onboard` to get started.
+Open your coding harness in the project directory and run `/onboard` to get started. You can start by just talking to it too, say hi!
+
+## Contributing
+
+All suggestions and contributions welcome. Submit an issue if you have any suggestions.
 
 ## Roadmap
 
-- seamless Ollama support for local models
+- Ollama support for local models
 
 ---
 
