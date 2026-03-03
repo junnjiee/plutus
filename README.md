@@ -10,9 +10,9 @@ Personal finance apps make you fit their boxes. Fixed categories, manual updates
 > I just bought 50 shares of VOO
 ```
 
-Fetch live prices, run calculations, ask for advice, create custom visualizations, and more.
+Fetch live prices, run spending simulations, ask for advice, create custom visualizations, and more.
 
-Works with any agentic coding harness: [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Codex](https://openai.com/codex/), [Opencode](https://opencode.ai/), and more.
+Works with any agentic coding harness: [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Codex](https://openai.com/codex/), [Opencode](https://opencode.ai/), etc.
 
 ## What It Does
 
