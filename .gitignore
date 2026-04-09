@@ -4,3 +4,7 @@ data/
 # dev
 __pycache__
 .venv
+
+# symlinks
+CLAUDE.md
+.claude
