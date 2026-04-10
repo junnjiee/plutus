@@ -1,23 +1,14 @@
 ---
 name: onboard
-description: Collect the user's initial financial data and create the base JSON files in data/. Use on first interaction or when local finance files do not exist yet. Focus on baseline data collection and flexible core schemas; do not handle feature or add-on selection here.
+description: Collect the user's initial financial data and create the base JSON files in data/. Use on first interaction or when local finance files do not exist yet. Focus on baseline data collection and flexible core schemas
 ---
 
 # Onboarding
 
 Use this skill to set up a user's local finance data for the first time.
 
-The goal is narrow:
-
-- collect the user's baseline financial information
-- define broad JSON schemas that fit their situation
-- write the initial files in `data/`
-
-Do not use onboarding to decide which optional finance features apply. Feature-specific skills can add fields or files later.
-
 ## Working Style
 
-- Use the current agent's normal way of asking questions, reading files, listing directories, and writing JSON. Do not rely on harness-specific tool names in the instructions.
 - Read any existing files in `data/` before asking questions so you do not overwrite information the user already provided.
 - Ask whether the user wants to provide everything at once or step by step, then match that pace.
 - Accept natural language input. Do not force a rigid template unless the user asks for one.
@@ -26,30 +17,28 @@ Do not use onboarding to decide which optional finance features apply. Feature-s
 
 ## Recommended Flow
 
-Collect the following in order, skipping sections that are clearly not relevant to the user:
+Collect the following in order, skipping sections if they are not relevant to the user:
 
 1. **Overview**
    Explain briefly what you track, that the data stays local in `data/` as JSON, and that you are going to collect the minimum needed to get started.
 2. **Profile**
-   Capture the user's base currency, currency symbol if they care about one, and current mode (`wealth_building` or `runway`).
-3. **Accounts**
-   Capture the accounts that matter for net worth and planning: cash, savings, investments, and any other material assets.
+   Capture the user's base currency, currency symbol if they care about one
+3. **Assets**
+   Capture the assets that matter for net worth and planning: cash, savings, investments, and any other material assets.
 4. **Cashflow**
    Capture recurring income, recurring expenses, and recurring investment contributions if the user tracks them separately.
 5. **Liabilities**
    Capture recurring obligations such as subscriptions, insurance, and loan repayments.
 6. **Goals**
    Capture any financial goals with target amounts and dates.
-7. **Preferences**
-   Capture any defaults that should shape later analysis or presentation, such as preferred detail level or drawdown order.
+7. **Intended Use**
+   Ask what the user primarily wants finance-agent to help with, which topics should be prioritized by default, and how much detail they want in responses.
 
 ## Data Collection Rules
 
-- Keep onboarding focused on foundational data. Do not ask the user to enable or disable add-ons here.
-- If the user volunteers information that belongs to a more specialized feature, preserve it only if it fits naturally into the schema. Otherwise note that a later skill can add it.
-- For investment accounts, offer two storage styles:
+- For investment assets, offer two storage styles:
   - units-based holdings with `ticker` and `units`
-  - balance-based accounts with a manually maintained `balance`
+  - balance-based assets with a manually maintained `balance`
 - Recommend units-based holdings because later skills can price them automatically, but do not force that format.
 - If a user provides a short ticker and you need to store it as a Yahoo Finance symbol, prepare the environment with `uv sync` and use `.venv/bin/mtool` to verify the symbol before saving it.
 - Use ISO 8601 dates (`YYYY-MM-DD`) for stored dates.
@@ -62,12 +51,19 @@ Before calculations or `mtool` usage, prepare the project environment with `uv s
 Create or update the base files in `data/`:
 
 - `profile.json`
-- `accounts.json`
+- `assets.json`
 - `cashflow.json`
 - `liabilities.json`
 - `goals.json`
 
 Only create the files that are relevant to the information the user has actually provided. If a section is not yet known, it can be omitted until later.
+
+## Logging Intended Use
+
+- Store intended-use information in `profile.json` under `preferences`, not as a separate top-level field.
+- At minimum, capture `intended_use` as a short summary of how the user wants to use finance-agent.
+- Add other flat, descriptive keys only when they will help future behavior, for example `default_focus`, `response_style`, or `calculation_detail`.
+- Later skills should read these preferences before choosing defaults, deciding what analyses to prioritize, or shaping how results are presented.
 
 ## Schema Guidance
 
@@ -79,7 +75,6 @@ These schemas are intentionally broad. Adapt them to the user's situation instea
 {
   "base_currency": "",
   "currency_symbol": "",
-  "mode": "wealth_building|runway",
   "preferences": {},
   "created": "YYYY-MM-DD",
   "last_updated": "YYYY-MM-DD"
@@ -91,14 +86,14 @@ Notes:
 - `preferences` is the long-term memory for user-specific defaults.
 - Add other top-level keys only when the user actually needs them.
 
-**accounts.json**
+**assets.json**
 
 ```json
 {
-  "accounts": [
+  "assets": [
     {
       "name": "",
-      "type": "cash|savings|investment|other_asset",
+      "type": "cash|savings|crypto|index_fund|stock|property|investment|other_asset",
       "currency": "",
       "balance": 0,
       "institution": "",
@@ -112,8 +107,8 @@ Notes:
 
 Notes:
 
-- Use either `balance` or `holdings` as the main valuation source for an account.
-- `holdings` is mainly for units-based investment accounts.
+- Use either `balance` or `holdings` as the main valuation source for an asset.
+- `holdings` is mainly for units-based investment assets.
 - Add fields only when they help later analysis.
 
 **cashflow.json**
@@ -126,14 +121,6 @@ Notes:
   "expenses": [
     {
       "category": "",
-      "amount": 0,
-      "currency": "",
-      "frequency": "monthly|yearly"
-    }
-  ],
-  "investment_allocations": [
-    {
-      "target_account": "",
       "amount": 0,
       "currency": "",
       "frequency": "monthly|yearly"
@@ -177,7 +164,7 @@ Notes:
       "target_amount": 0,
       "currency": "",
       "target_date": "YYYY-MM-DD",
-      "linked_accounts": [],
+      "linked_assets": [],
       "created": "YYYY-MM-DD",
       "notes": ""
     }
