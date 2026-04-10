@@ -8,7 +8,7 @@ Onboarding gate: if the workspace is not onboarded, onboarding takes priority ov
 
 1. If `data/` does not exist, contains no JSON files, or `data/profile.json` is missing, treat the workspace as not onboarded.
 2. Before any other action, inspect `data/`.
-3. In the not-onboarded state, use the `onboard` skill immediately. Do not ask clarifying questions before invoking onboarding, and do not attempt normal finance workflows first.
+3. In the not-onboarded state, use the `fa-onboard` skill immediately. Do not ask clarifying questions before invoking onboarding, and do not attempt normal finance workflows first.
 
 Claude model gate: If you are a Claude model, you must check for `.claude/skills/`
 
