@@ -38,6 +38,8 @@ Open your coding harness in the project directory and run `/onboard` to get star
 
 ### Getting Started with Hermes Agent
 
+You can send Hermes the link to this repo and get it to set up for you.
+
 #### Prerequisites
 
 - [Hermes Agent](https://hermes.example.com) installed and on your `PATH`
@@ -69,12 +71,12 @@ Open your coding harness in the project directory and run `/onboard` to get star
 
 Once setup completes, the following skills are available in Hermes:
 
-| Skill | Invoke | Use for |
-|---|---|---|
-| `fa-onboard` | `/fa-onboard` | Initial setup — collect your baseline financial data |
-| `fa-net-worth` | `/fa-net-worth` | Net worth, portfolio valuations, and asset allocation |
-| `fa-analyze-cashflow` | `/fa-analyze-cashflow` | Cashflow, savings rate, burn rate, and runway |
-| `fa-liability-tracker` | `/fa-liability-tracker` | Recurring liabilities and subscription tracking |
+| Skill                  | Invoke                  | Use for                                               |
+| ---------------------- | ----------------------- | ----------------------------------------------------- |
+| `fa-onboard`           | `/fa-onboard`           | Initial setup — collect your baseline financial data  |
+| `fa-net-worth`         | `/fa-net-worth`         | Net worth, portfolio valuations, and asset allocation |
+| `fa-analyze-cashflow`  | `/fa-analyze-cashflow`  | Cashflow, savings rate, burn rate, and runway         |
+| `fa-liability-tracker` | `/fa-liability-tracker` | Recurring liabilities and subscription tracking       |
 
 Start Hermes from any directory — skills and your data directory are pre-configured automatically.
 
