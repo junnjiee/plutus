@@ -1,7 +1,6 @@
 ---
-name: cashflow
-description: Analyze monthly cashflow and show either savings rate or runway automatically. Use when the user asks about cashflow, monthly surplus/deficit, burn rate, savings rate, or how long their money will last.
-allowed-tools: Read, Write, Glob, Bash, AskUserQuestion
+name: analyze-cashflow
+description: Analyze monthly cashflow and show either savings rate or runway automatically. Use when the user asks about cashflow, monthly surplus/deficit, burn rate, savings rate, how long to reach a goal amount, how long their money will last, or other relevant questions.
 ---
 
 # Cashflow
@@ -128,11 +127,11 @@ If `liquidity_tiers` is enabled, `total_liquid_assets` uses only immediate and s
 
 Always show these three scenarios:
 
-| Scenario | Returns | Expense Adjustment |
-| --- | --- | --- |
-| Conservative | 0% annually | +5% |
-| Base | 4% annually | 0% |
-| Optimistic | 7% annually | -5% |
+| Scenario     | Returns     | Expense Adjustment |
+| ------------ | ----------- | ------------------ |
+| Conservative | 0% annually | +5%                |
+| Base         | 4% annually | 0%                 |
+| Optimistic   | 7% annually | -5%                |
 
 Account for:
 
