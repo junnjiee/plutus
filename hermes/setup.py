@@ -56,7 +56,7 @@ def build_extra_frontmatter(skill_name: str, data_dir: str) -> str:
         f"author: finance-agent\n"
         f"license: MIT\n"
         f"prerequisites:\n"
-        f"  commands: [uv]\n"
+        f"  commands: [mtool]\n"
         f"metadata:\n"
         f"  hermes:\n"
         f"    tags: {tags}\n"
