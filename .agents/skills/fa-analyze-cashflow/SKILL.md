@@ -55,8 +55,6 @@ Use this sign test to choose the output mode.
 
 For investment accounts with `holdings`, calculate balance automatically as `units × current price` using `.venv/bin/mtool ticker`.
 
-Tickers must use Yahoo Finance format. If the user gives a short ticker, look up the correct Yahoo Finance symbol before storing it.
-
 For manual investment accounts with a flat `balance`, use the stored balance.
 
 ## Savings Mode

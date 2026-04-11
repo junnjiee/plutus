@@ -40,7 +40,6 @@ Collect the following in order, skipping sections if they are not relevant to th
   - units-based holdings with `ticker` and `units`
   - balance-based assets with a manually maintained `balance`
 - Recommend units-based holdings because later skills can price them automatically, but do not force that format.
-- If a user provides a short ticker and you need to store it as a Yahoo Finance symbol, prepare the environment with `uv sync` and use `.venv/bin/mtool` to verify the symbol before saving it.
 - Use ISO 8601 dates (`YYYY-MM-DD`) for stored dates.
 - Do not store unnecessary sensitive information such as account numbers or national identifiers.
 

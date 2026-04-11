@@ -53,6 +53,21 @@ Personal finance is not one-size-fits-all. Everyone has different income pattern
 - Use `.venv/bin/python` for any math or date computations that are easier or safer to script.
 - If `uv` or Python is unavailable, tell the user what is missing and stop until the environment can be prepared.
 
+## Pitfalls
+
+These are known failure modes. Apply them globally, regardless of which skill is active.
+
+### Invalid or Unresolvable Tickers
+
+- Always verify a ticker with `.venv/bin/mtool ticker` before storing it.
+- If `mtool` returns an error or no data, search Yahoo Finance via `WebSearch` to find the correct symbol, then retry `mtool` with the resolved symbol.
+- If the ticker still cannot be resolved after searching, do not store or assume a value silently — report the issue and ask the user for clarification.
+- When pricing holdings mid-calculation, if a ticker remains unresolvable, mark the affected holding as unpriced and continue with the rest rather than failing the whole calculation.
+
+### Silent Assumptions
+
+- Do not silently guess missing exchange rates, liability balances, or ticker symbols. Surface uncertainty to the user explicitly.
+
 ## Market Data Caching
 
 - Cache ticker prices and exchange rates within the same conversation.

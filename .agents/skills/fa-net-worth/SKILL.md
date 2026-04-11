@@ -27,7 +27,6 @@ Use this skill to show your user's net worth based on the data collected
 - For savings, cash, and balance-based investment accounts, use the stored `balance`.
 - For units-based investment accounts, compute `units * current price` using `.venv/bin/mtool ticker`.
 - Preserve each account's native currency during intermediate calculations. Convert only when presenting a base-currency total.
-- If a ticker is missing, invalid, or returns no price, report the affected holding clearly and continue with the rest of the portfolio instead of failing the whole summary.
 
 ## Handle portfolio composition and performance requests
 
@@ -49,6 +48,5 @@ Use this skill to show your user's net worth based on the data collected
 ## Guardrails
 
 - Never overwrite stored account data without confirming with the user first.
-- Do not guess missing exchange rates, liability balances, or ticker symbols silently.
 - Prefer explicit caveats over false precision when the data model is incomplete.
 - If a request crosses into runway, savings rate, or goal planning, use the matching skill instead of stretching this one to cover everything.
