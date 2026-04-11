@@ -76,6 +76,14 @@ def prompt_harnesses() -> list[str]:
     return selected or []
 
 
+GLOBAL_CONFIG = Path.home() / ".config" / "finance_agent" / "mtool.json"
+
+
+def save_global_config():
+    GLOBAL_CONFIG.parent.mkdir(parents=True, exist_ok=True)
+    GLOBAL_CONFIG.write_text(json.dumps({"repo_root": str(REPO_ROOT)}, indent=2))
+
+
 def save_config(data_dir: str, selected: list[str]):
     SETUP_CONFIG.write_text(
         json.dumps({"data_dir": data_dir, "harnesses": selected}, indent=2)
@@ -170,6 +178,7 @@ def main():
             return
 
         save_config(data_dir, selected)
+        save_global_config()
 
     print()
 
