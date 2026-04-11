@@ -6,6 +6,7 @@ Usage:
     python openclaw/setup.py
     uv run python openclaw/setup.py
 """
+
 import json
 import os
 import re
@@ -32,13 +33,15 @@ ADAPTER_NOTE = """\
 > directory set in `FINANCE_AGENT_DATA_DIR` (injected via OpenClaw's skill entry
 > config). For example, `data/profile.json` becomes `$FINANCE_AGENT_DATA_DIR/profile.json`.
 > Use `mtool` directly — it is installed globally. No `uv sync` step is needed.
-> If the user is chatting in a messaging app, markdown is usually not supported — do not use markdown tables there.
+> If the user is messaging via a chat app (Telegram, WhatsApp, Signal, iMessage, etc.),
+> use no markdown formatting and no markdown tables. Use emojis where appropriate.
 """
 
 
 # ---------------------------------------------------------------------------
 # Skill generation
 # ---------------------------------------------------------------------------
+
 
 def build_openclaw_metadata(skill_name: str) -> str:
     """
@@ -127,6 +130,7 @@ def transform(content: str, skill_name: str) -> str:
 # Installation steps
 # ---------------------------------------------------------------------------
 
+
 def install_mtool() -> bool:
     print("\nInstalling mtool globally via uv tool...")
     result = subprocess.run(
@@ -185,7 +189,9 @@ def _load_config() -> dict:
     except json.JSONDecodeError:
         bak = OPENCLAW_CONFIG.with_suffix(".json.bak")
         OPENCLAW_CONFIG.replace(bak)
-        print(f"  WARNING: Could not parse {OPENCLAW_CONFIG.name} — backed up to {bak.name}")
+        print(
+            f"  WARNING: Could not parse {OPENCLAW_CONFIG.name} — backed up to {bak.name}"
+        )
         return {}
 
 
@@ -226,6 +232,7 @@ def configure_openclaw(data_dir: str):
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
+
 
 def main():
     print("finance-agent → OpenClaw setup")

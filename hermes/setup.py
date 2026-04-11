@@ -6,6 +6,7 @@ Usage:
     python hermes/setup.py
     uv run python hermes/setup.py
 """
+
 import os
 import re
 import subprocess
@@ -21,7 +22,11 @@ HERMES_CONFIG = HERMES_HOME / "config.yaml"
 SKILL_META = {
     "fa-onboard": {
         "tags": ["finance", "personal-finance", "setup", "onboarding"],
-        "related_skills": ["fa-net-worth", "fa-analyze-cashflow", "fa-liability-tracker"],
+        "related_skills": [
+            "fa-net-worth",
+            "fa-analyze-cashflow",
+            "fa-liability-tracker",
+        ],
     },
     "fa-net-worth": {
         "tags": ["finance", "personal-finance", "net-worth", "portfolio"],
@@ -41,13 +46,15 @@ ADAPTER_NOTE = """\
 > **Hermes adapter note:** All `data/` path references below should be resolved
 > using the `finance_agent.data_dir` value from the skill config injected above.
 > Use `mtool` directly — it is installed globally. No `uv sync` step is needed.
-> If the user is chatting in a messaging app, markdown is usually not supported — do not use markdown tables there.
+> If the user is messaging via a chat app (Telegram, WhatsApp, Signal, iMessage, etc.),
+> use no markdown formatting and no markdown tables. Use emojis where appropriate.
 """
 
 
 # ---------------------------------------------------------------------------
 # Skill generation
 # ---------------------------------------------------------------------------
+
 
 def build_extra_frontmatter(skill_name: str, data_dir: str) -> str:
     meta = SKILL_META.get(skill_name, {"tags": ["finance"], "related_skills": []})
@@ -66,7 +73,7 @@ def build_extra_frontmatter(skill_name: str, data_dir: str) -> str:
         f"    config:\n"
         f"      - key: finance_agent.data_dir\n"
         f"        description: Absolute path to the finance-agent data directory\n"
-        f"        default: \"{data_dir}\"\n"
+        f'        default: "{data_dir}"\n'
         f"        prompt: Where is your finance-agent data directory?\n"
     )
 
@@ -139,6 +146,7 @@ def transform(content: str, skill_name: str, data_dir: str) -> str:
 # ---------------------------------------------------------------------------
 # Installation steps
 # ---------------------------------------------------------------------------
+
 
 def install_mtool() -> bool:
     print("\nInstalling mtool globally via uv tool...")
@@ -214,10 +222,7 @@ def configure_hermes(data_dir: str):
     if re.search(r"^skills\s*:", existing, re.MULTILINE):
         # Sub-case: skills.config already exists → append finance_agent under it.
         if re.search(r"^  config\s*:", existing, re.MULTILINE):
-            fa_entry = (
-                "    finance_agent:\n"
-                f"      data_dir: {quoted_dir}\n"
-            )
+            fa_entry = f"    finance_agent:\n      data_dir: {quoted_dir}\n"
             updated = re.sub(
                 r"(^  config\s*:\n)",
                 r"\1" + fa_entry,
@@ -227,11 +232,7 @@ def configure_hermes(data_dir: str):
             )
         else:
             # Sub-case: no config: under skills yet → create it.
-            fa_entry = (
-                "  config:\n"
-                "    finance_agent:\n"
-                f"      data_dir: {quoted_dir}\n"
-            )
+            fa_entry = f"  config:\n    finance_agent:\n      data_dir: {quoted_dir}\n"
             updated = re.sub(
                 r"(^skills\s*:\s*\n)",
                 r"\1" + fa_entry,
@@ -253,6 +254,7 @@ def configure_hermes(data_dir: str):
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
+
 
 def main():
     print("finance-agent → Hermes Agent setup")
