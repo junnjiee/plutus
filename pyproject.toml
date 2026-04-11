@@ -1,6 +1,6 @@
 [project]
 name = "finance_agent"
-version = "0.1.0"
+version = "0.7.0"
 description = "CLI built around finance_agent"
 readme = "README.md"
 requires-python = ">=3.13"
