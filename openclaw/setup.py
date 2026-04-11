@@ -29,9 +29,8 @@ SKILL_META = {
 }
 
 ADAPTER_NOTE = """\
-> **OpenClaw adapter note:** All `data/` path references below resolve to the
-> directory set in `FINANCE_AGENT_DATA_DIR` (injected via OpenClaw's skill entry
-> config). For example, `data/profile.json` becomes `$FINANCE_AGENT_DATA_DIR/profile.json`.
+> **OpenClaw adapter note:** When instructions refer to "the data directory", use
+> the value of `FINANCE_AGENT_DATA_DIR` (injected via OpenClaw's skill entry config).
 > Use `mtool` directly — it is installed globally. No `uv sync` step is needed.
 > If the user is messaging via a chat app (Telegram, WhatsApp, Signal, iMessage, etc.),
 > use no markdown formatting and no markdown tables. Use emojis where appropriate.
@@ -242,7 +241,10 @@ def main():
         print(f"ERROR: skills directory not found at {SKILLS_SRC}")
         sys.exit(1)
 
-    default_data = str(REPO_ROOT / "data")
+    default_data = os.environ.get(
+        "FINANCE_AGENT_DATA_DIR",
+        str(Path.home() / ".config" / "finance_agent" / "data"),
+    )
     raw = input(f"\nData directory path [{default_data}]: ").strip()
     data_dir = str(Path(raw or default_data).expanduser().resolve())
 

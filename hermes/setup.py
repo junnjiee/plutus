@@ -43,8 +43,8 @@ SKILL_META = {
 }
 
 ADAPTER_NOTE = """\
-> **Hermes adapter note:** All `data/` path references below should be resolved
-> using the `finance_agent.data_dir` value from the skill config injected above.
+> **Hermes adapter note:** When instructions refer to "the data directory", use
+> the `finance_agent.data_dir` value from the skill config injected above.
 > Use `mtool` directly — it is installed globally. No `uv sync` step is needed.
 > If the user is messaging via a chat app (Telegram, WhatsApp, Signal, iMessage, etc.),
 > use no markdown formatting and no markdown tables. Use emojis where appropriate.
@@ -264,7 +264,10 @@ def main():
         print(f"ERROR: skills directory not found at {SKILLS_SRC}")
         sys.exit(1)
 
-    default_data = str(REPO_ROOT / "data")
+    default_data = os.environ.get(
+        "FINANCE_AGENT_DATA_DIR",
+        str(Path.home() / ".config" / "finance_agent" / "data"),
+    )
     raw = input(f"\nData directory path [{default_data}]: ").strip()
     data_dir = raw or default_data
 
