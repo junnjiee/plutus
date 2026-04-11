@@ -58,11 +58,10 @@ Personal finance is not one-size-fits-all. Everyone has different income pattern
 
 ## Environment Rules
 
-- Before calculations or market data lookups, ensure the project environment is ready with `uv sync`.
-- Use `.venv/bin/mtool` for ticker, history, and FX lookups.
-- Use `.venv/bin/python` for any math or date computations that are easier or safer to script.
-- If `uv` or Python is unavailable, tell the user what is missing and stop until the environment can be prepared.
-- When unsure about available CLI commands, subcommands, or their inputs, run the command with `--help` first. Prefer `--help` over guessing flags or argument order.
+- Use `mtool` for market data and expense management. The top-level subcommands are `market` and `expenses`. Run `mtool --help` to discover available commands; run `mtool <command> --help` or `mtool <command> <subcommand> --help` for flags and argument details.
+- For ticker prices and FX rates, use `mtool market ticker`. For historical performance, use `mtool market history`. There is no `mtool fx` command — fetch FX rates using ticker symbols like `USDSGD=X` via `mtool market ticker`.
+- Use `python` for any math or date computations that are easier or safer to script.
+- Always use `--help` before invoking a command you are unsure about. Never guess flags or argument order.
 
 ## Pitfalls
 
@@ -70,7 +69,7 @@ These are known failure modes. Apply them globally, regardless of which skill is
 
 ### Invalid or Unresolvable Tickers
 
-- Always verify a ticker with `.venv/bin/mtool ticker` before storing it.
+- Always verify a ticker with `mtool market ticker` before storing it.
 - If `mtool` returns an error or no data, search Yahoo Finance via `WebSearch` to find the correct symbol, then retry `mtool` with the resolved symbol.
 - If the ticker still cannot be resolved after searching, do not store or assume a value silently — report the issue and ask the user for clarification.
 - When pricing holdings mid-calculation, if a ticker remains unresolvable, mark the affected holding as unpriced and continue with the rest rather than failing the whole calculation.

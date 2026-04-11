@@ -18,22 +18,22 @@ Resolve the data directory first: use `FINANCE_AGENT_DATA_DIR` if set, otherwise
 
 ## Prepare pricing only when needed
 
-- Before any calculation that depends on market data or FX, run `uv sync`.
-- Use `.venv/bin/mtool ticker` for current prices and exchange rates.
-- Use `.venv/bin/mtool history` only when the user asks about performance over time.
+- Use `mtool market ticker` for current prices. Run `mtool market ticker --help` if unsure of flags.
+- Use `mtool market history` only when the user asks about performance over time. Run `mtool market history --help` if unsure of flags.
+- For FX rates, use `mtool market ticker` with Yahoo Finance currency pair symbols (e.g. `--ticker USDSGD=X`).
 - Cache ticker prices and FX rates within the conversation. Reuse cached values unless the user explicitly asks for a refresh or enough time has passed that a refresh is justified.
 - Batch unique tickers into as few `mtool` calls as possible.
 
 ## Value each account without flattening away metadata
 
 - For savings, cash, and balance-based investment accounts, use the stored `balance`.
-- For units-based investment accounts, compute `units * current price` using `.venv/bin/mtool ticker`.
+- For units-based investment accounts, compute `units * current price` using `mtool market ticker`.
 - Preserve each account's native currency during intermediate calculations. Convert only when presenting a base-currency total.
 
 ## Handle portfolio composition and performance requests
 
 - Always provide allocation percentages for invested assets when the user asks for portfolio mix.
-- When the user asks how the portfolio performed, use `.venv/bin/mtool history -t ... -p <period>` for units-based holdings.
+- When the user asks how the portfolio performed, use `mtool market history` with the appropriate ticker and period flags for units-based holdings.
 - Prefer a value-weighted portfolio summary when combining multiple holdings and state that choice in one line.
 - Do not fabricate returns for balance-based investment accounts. Exclude them from return calculations or note that performance is unavailable without historical price or transaction data.
 - If the user asks for a "periodic summary", include current net worth, major account changes, allocation shifts, and performance for the requested period if data exists.

@@ -14,37 +14,26 @@ Use this skill to manage and analyze individual expenses. It covers two responsi
 
 Resolve the data directory first: use `FINANCE_AGENT_DATA_DIR` if set, otherwise `~/.config/finance_agent/data/`.
 
-- Ensure the environment is ready: `uv sync`
 - Read `profile.json` to load `base_currency`, `currency_symbol`, and any expense-related preferences
 - Read `cashflow.json` to load `planned_expenses` for budget comparison
-- The expense database is at `<data_dir>/finance_agent.db` (SQLite, managed by `mtool`)
+- The handling of expense data can be managed through `mtool`,
 
 Relevant preferences to check in `profile.json` under `preferences`:
 
-| Key | Default | Meaning |
-|---|---|---|
-| `expense_confirm_before_write` | `false` | If `true`, ask for explicit confirmation before every write |
-| `expense_display_currency` | base_currency | Currency to convert totals into for summaries |
+| Key                            | Default       | Meaning                                                     |
+| ------------------------------ | ------------- | ----------------------------------------------------------- |
+| `expense_confirm_before_write` | `false`       | If `true`, ask for explicit confirmation before every write |
+| `expense_display_currency`     | base_currency | Currency to convert totals into for summaries               |
 
 If `expense_display_currency` is not yet set and a multi-currency summary is requested, ask the user which currency they prefer for rolled-up totals, then store their answer in `profile.json` before proceeding.
 
 ## CLI Reference
 
-All expense operations go through `.venv/bin/mtool expenses`. All commands return JSON.
+All expense operations go through `mtool expenses`. All commands return JSON.
 
-```
-# Add
-mtool expenses add <amount> <currency> [--date YYYY-MM-DD] [--category <cat>] [--merchant <name>] [--desc <text>] [--account <name>]
+Before using any subcommand, run `mtool expenses --help` or `mtool expenses <subcommand> --help` to see current flags and argument order. Do not rely on memorized syntax — always confirm with `--help` first.
 
-# List / query
-mtool expenses list [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--category <cat>] [--merchant <name>] [--currency <code>] [--min <n>] [--max <n>] [--limit <n>]
-
-# Update
-mtool expenses update <id> [--amount <n>] [--currency <code>] [--date YYYY-MM-DD] [--category <cat>] [--merchant <name>] [--desc <text>] [--account <name>]
-
-# Delete (always pass --yes to skip interactive prompt)
-mtool expenses delete <id> --yes
-```
+The available subcommands are: `add`, `list`, `update`, `delete`.
 
 ## Adding Expenses
 
@@ -57,21 +46,25 @@ mtool expenses list --limit 100
 ```
 
 Use this data to:
+
 - Suggest a category based on merchant name patterns (e.g. "Grab" → "transport" or "food" depending on prior entries)
 - Normalize all categories to lowercase before storing
 - Never silently introduce a new category variant — if in doubt, ask
 
 **Default behavior (confirm-after):**
+
 1. Infer category and merchant from context and prior data
 2. Write the expense immediately
-3. After writing, confirm what was inferred: *"Logged $45 SGD to Grab under 'transport' on 2026-04-11. Correct?"*
+3. After writing, confirm what was inferred: _"Logged $45 SGD to Grab under 'transport' on 2026-04-11. Correct?"_
 4. If the user corrects it, run `update` immediately
 
 **Confirm-before behavior** (when `expense_confirm_before_write: true`):
+
 1. Infer category and merchant
 2. Show what you plan to write and ask for confirmation before running `add`
 
 **When to ask inline regardless of preference:**
+
 - No prior expenses exist to infer from
 - The merchant is genuinely ambiguous (e.g. "Amazon" could be groceries, electronics, or subscriptions)
 - The user provides no merchant or category and the amount gives no signal
@@ -79,6 +72,7 @@ Use this data to:
 ### Bulk entry
 
 When the user pastes a list of expenses:
+
 - Process them in order, applying inference to each
 - Write all entries, then show a summary table of what was logged
 - Flag any entries where inference was uncertain so the user can correct in bulk
@@ -112,6 +106,7 @@ Show for the selected period:
 ### Trend View
 
 When the user asks for trends or month-over-month:
+
 - Fetch current month and previous month data
 - Show per-category delta: amount change and direction
 - Flag categories where spend increased >20% vs prior month
@@ -122,6 +117,7 @@ When the user asks for trends or month-over-month:
 Compare actuals from the SQLite DB against `planned_expenses` in `cashflow.json`.
 
 **Matching logic (loose coupling):**
+
 1. Normalize both sides to lowercase
 2. Exact match first, then substring match (e.g. actual `"groceries"` matches planned `"grocery"`)
 3. For matched categories, show: planned amount, actual amount, delta, and over/under status
@@ -134,12 +130,12 @@ Do not fail if matching is partial. Surface unmatched items clearly so the user 
 
 **Budget comparison table format:**
 
-| Category | Planned | Actual | Delta | Status |
-|---|---|---|---|---|
-| groceries | $500 | $430 | -$70 | under |
-| transport | $150 | $210 | +$60 | over |
-| dining | — | $320 | — | no budget set |
-| utilities | $100 | — | — | no spend recorded |
+| Category  | Planned | Actual | Delta | Status            |
+| --------- | ------- | ------ | ----- | ----------------- |
+| groceries | $500    | $430   | -$70  | under             |
+| transport | $150    | $210   | +$60  | over              |
+| dining    | —       | $320   | —     | no budget set     |
+| utilities | $100    | —      | —     | no spend recorded |
 
 ## Category Consistency
 
@@ -154,7 +150,7 @@ The goal is a stable, user-derived taxonomy — not a forced preset list.
 ## Currency Handling
 
 - Store expenses in their original currency (do not convert on write)
-- For summaries and totals, convert to `expense_display_currency` using `.venv/bin/mtool fx`
+- For summaries and totals, convert to `expense_display_currency` using `mtool market ticker` with Yahoo Finance FX pair symbols (e.g. `--ticker USDSGD=X`)
 - Show exchange rates used as a footnote in any converted summary
 - Cache exchange rates within the session; do not re-fetch unless the user asks
 
@@ -163,4 +159,3 @@ The goal is a stable, user-derived taxonomy — not a forced preset list.
 - Never overwrite or delete without confirmation
 - Never invent category names that are not derived from user data or explicit user input
 - Never silently fail on currency conversion — if a rate is unavailable, mark the affected rows as unconverted and continue
-- If the database does not exist yet, inform the user and suggest running `uv sync` to initialize it

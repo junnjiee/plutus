@@ -27,7 +27,7 @@ In general, model the user's finances as monthly cashflow if ambiguous.
 
 ### Inflow
 
-Normalize all income in `data/cashflow.json` to monthly values.
+Normalize all income in `cashflow.json` (in the data directory) to monthly values.
 
 ### Outflow
 
@@ -44,7 +44,7 @@ Before calculating outflow, determine whether enough actual expense data exists:
 When using actual expenses:
 - Use the most recent complete calendar month as the representative monthly outflow
 - Run `mtool expenses list --from YYYY-MM-01 --to YYYY-MM-31` for that month
-- Convert all amounts to `base_currency` using `.venv/bin/mtool fx` before summing
+- Convert all amounts to `base_currency` using `mtool market ticker` with Yahoo Finance FX pair symbols (e.g. `--ticker USDSGD=X`) before summing
 - Label the outflow figure clearly: *"based on actual expenses (Month YYYY)"*
 - Note any categories in `planned_expenses` that have no matching actual spend, in case they were simply not logged
 
@@ -75,7 +75,7 @@ Use this sign test to choose the output mode.
 
 ## Account Valuation
 
-For investment accounts with `holdings`, calculate balance automatically as `units × current price` using `.venv/bin/mtool ticker`.
+For investment accounts with `holdings`, calculate balance automatically as `units × current price` using `mtool market ticker`.
 
 For manual investment accounts with a flat `balance`, use the stored balance.
 

@@ -49,8 +49,6 @@ Collect the following in order, skipping sections if they are not relevant to th
 
 ## File Setup
 
-Before calculations or `mtool` usage, prepare the project environment with `uv sync`.
-
 Create or update the base files in the data directory:
 
 - `profile.json`

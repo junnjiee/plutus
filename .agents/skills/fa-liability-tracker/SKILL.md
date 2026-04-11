@@ -20,7 +20,7 @@ Resolve the data directory first: use `FINANCE_AGENT_DATA_DIR` if set, otherwise
 - Read `profile.json` from the data directory first.
 - Read `liabilities.json` from the data directory before making calculations or recommendations.
 - When the user reports a change, confirm the intended edit if it would overwrite or remove an existing item, then update `liabilities.json` in the data directory immediately.
-- Use `.venv/bin/python` for date math when needed. If the environment is not ready yet, run `uv sync` first.
+- Use `python` for date math when needed.
 
 Rules:
 
