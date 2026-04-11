@@ -154,6 +154,8 @@ def install_skills():
     print(f"\nGenerating and installing skills to {OPENCLAW_SKILLS_DIR} ...")
     OPENCLAW_SKILLS_DIR.mkdir(parents=True, exist_ok=True)
 
+    installed, updated, unchanged = [], [], []
+
     for skill_dir in sorted(SKILLS_SRC.iterdir()):
         if not skill_dir.is_dir():
             continue
@@ -167,9 +169,26 @@ def install_skills():
         dest_dir = OPENCLAW_SKILLS_DIR / skill_name
         dest_dir.mkdir(parents=True, exist_ok=True)
         dest = dest_dir / "SKILL.md"
-        action = "updated" if dest.exists() else "installed"
-        dest.write_text(generated)
-        print(f"  {action}  /{skill_name}")
+
+        if not dest.exists():
+            dest.write_text(generated)
+            installed.append(skill_name)
+            print(f"  installed  /{skill_name}")
+        elif dest.read_text() == generated:
+            unchanged.append(skill_name)
+            print(f"  unchanged  /{skill_name}")
+        else:
+            dest.write_text(generated)
+            updated.append(skill_name)
+            print(f"  updated    /{skill_name}")
+
+    print()
+    if updated:
+        print(f"  Updated:   {', '.join(updated)}")
+    if installed:
+        print(f"  Installed: {', '.join(installed)}")
+    if unchanged:
+        print(f"  Unchanged: {', '.join(unchanged)}")
 
 
 def _load_config() -> dict:
