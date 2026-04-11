@@ -1,15 +1,19 @@
 ---
 name: fa-onboard
-description: Collect the user's initial financial data and create the base JSON files in data/. Use on first interaction or when local finance files do not exist yet. Focus on baseline data collection and flexible core schemas
+description: Collect the user's initial financial data and create the base JSON files in the data directory. Use on first interaction or when local finance files do not exist yet. Focus on baseline data collection and flexible core schemas
 ---
 
 # Onboarding
 
 Use this skill to set up a user's local finance data for the first time.
 
+## Data Directory
+
+Resolve the data directory before any file operations: use `FINANCE_AGENT_DATA_DIR` if set, otherwise `~/.config/finance_agent/data/`. Create it if it does not exist.
+
 ## Working Style
 
-- Read any existing files in `data/` before asking questions so you do not overwrite information the user already provided.
+- Read any existing files in the data directory before asking questions so you do not overwrite information the user already provided.
 - Ask whether the user wants to provide everything at once or step by step, then match that pace.
 - Accept natural language input. Do not force a rigid template unless the user asks for one.
 - Keep a running summary of what has been captured so far.
@@ -20,7 +24,7 @@ Use this skill to set up a user's local finance data for the first time.
 Collect the following in order, skipping sections if they are not relevant to the user:
 
 1. **Overview**
-   Explain briefly what you track, that the data stays local in `data/` as JSON, and that you are going to collect the minimum needed to get started.
+   Explain briefly what you track, that the data stays local as JSON in the data directory, and that you are going to collect the minimum needed to get started.
 2. **Profile**
    Capture the user's base currency, currency symbol if they care about one
 3. **Assets**
@@ -45,9 +49,7 @@ Collect the following in order, skipping sections if they are not relevant to th
 
 ## File Setup
 
-Before calculations or `mtool` usage, prepare the project environment with `uv sync`.
-
-Create or update the base files in `data/`:
+Create or update the base files in the data directory:
 
 - `profile.json`
 - `assets.json`
@@ -117,7 +119,7 @@ Notes:
   "income": [
     { "source": "", "amount": 0, "currency": "", "frequency": "monthly|yearly" }
   ],
-  "expenses": [
+  "planned_expenses": [
     {
       "category": "",
       "amount": 0,

@@ -4,11 +4,11 @@ from typing import Annotated
 import typer
 import yfinance as yf
 
-app = typer.Typer()
+app = typer.Typer(help="Fetch market data from Yahoo Finance.")
 
 
-@app.command()
-def ticker(
+@app.command("ticker")
+def cmd_ticker(
     symbols: Annotated[
         list[str],
         typer.Option("--ticker", "-t", help="Ticker symbol (e.g. -t AAPL -t MSFT)"),
@@ -37,8 +37,8 @@ def ticker(
     typer.echo(json.dumps(results, indent=2))
 
 
-@app.command()
-def history(
+@app.command("history")
+def cmd_history(
     symbols: Annotated[
         list[str],
         typer.Option("--ticker", "-t", help="Ticker symbol (e.g. -t AAPL -t MSFT)"),
@@ -73,7 +73,3 @@ def history(
             "annualized_return_pct": round(annualized_return * 100, 2),
         }
     typer.echo(json.dumps(results, indent=2))
-
-
-if __name__ == "__main__":
-    app()

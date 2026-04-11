@@ -15,9 +15,11 @@ The core rule is simple:
 
 ## Load the local finance context
 
-- If `data/` does not exist, direct the user to onboard using the `fa-onboard` skill.
-- Read `data/profile.json` first.
-- Read all current data files before making recommendations or calculations
+Resolve the data directory first: use `FINANCE_AGENT_DATA_DIR` if set, otherwise `~/.config/finance_agent/data/`.
+
+- If the data directory does not exist, direct the user to onboard using the `fa-onboard` skill.
+- Read `profile.json` from the data directory first.
+- Read all current data files from the data directory before making recommendations or calculations.
 
 ## Inputs and Normalization
 
@@ -25,11 +27,31 @@ In general, model the user's finances as monthly cashflow if ambiguous.
 
 ### Inflow
 
-Normalize all income in `data/cashflow.json` to monthly values.
+Normalize all income in `cashflow.json` (in the data directory) to monthly values.
 
 ### Outflow
 
-In general, outflow should be `expenses + recurring liabilities`
+In general, outflow should be `actual expenses (or planned fallback) + recurring liabilities`
+
+#### Expense data source selection
+
+Before calculating outflow, determine whether enough actual expense data exists:
+
+1. Query the expense database: `mtool expenses list --limit 1` to check if any records exist, then check the earliest and latest dates
+2. **Use actual expenses** if the database contains at least one complete prior calendar month of data (i.e. there is a month, before the current one, where the user recorded expenses)
+3. **Fall back to `planned_expenses`** from `cashflow.json` if actual data is insufficient
+
+When using actual expenses:
+- Use the most recent complete calendar month as the representative monthly outflow
+- Run `mtool expenses list --from YYYY-MM-01 --to YYYY-MM-31` for that month
+- Convert all amounts to `base_currency` using `mtool market ticker` with Yahoo Finance FX pair symbols (e.g. `--ticker USDSGD=X`) before summing
+- Label the outflow figure clearly: *"based on actual expenses (Month YYYY)"*
+- Note any categories in `planned_expenses` that have no matching actual spend, in case they were simply not logged
+
+When using planned expenses:
+- Read from the `planned_expenses` array in `cashflow.json` (not `expenses` — that key was renamed)
+- Normalize all amounts to monthly values
+- Label the outflow figure clearly: *"based on planned expenses (no sufficient actual data yet)"*
 
 Separate liabilities by frequency when calculating outflow. If user has specific preferences, override this rule:
 
@@ -53,7 +75,7 @@ Use this sign test to choose the output mode.
 
 ## Account Valuation
 
-For investment accounts with `holdings`, calculate balance automatically as `units × current price` using `.venv/bin/mtool ticker`.
+For investment accounts with `holdings`, calculate balance automatically as `units × current price` using `mtool market ticker`.
 
 For manual investment accounts with a flat `balance`, use the stored balance.
 
@@ -128,7 +150,7 @@ Show:
 
 ## Preferences
 
-`data/profile.json` stores user preferences under `preferences`.
+`profile.json` (in the data directory) stores user preferences under `preferences`.
 
 Persist preferences when the user states them, for example:
 

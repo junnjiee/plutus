@@ -7,6 +7,7 @@ Usage:
     uv run python hermes/setup.py
 """
 
+import argparse
 import os
 import re
 import subprocess
@@ -43,8 +44,8 @@ SKILL_META = {
 }
 
 ADAPTER_NOTE = """\
-> **Hermes adapter note:** All `data/` path references below should be resolved
-> using the `finance_agent.data_dir` value from the skill config injected above.
+> **Hermes adapter note:** When instructions refer to "the data directory", use
+> the `finance_agent.data_dir` value from the skill config injected above.
 > Use `mtool` directly — it is installed globally. No `uv sync` step is needed.
 > If the user is messaging via a chat app (Telegram, WhatsApp, Signal, iMessage, etc.),
 > use no markdown formatting and no markdown tables. Use emojis where appropriate.
@@ -257,6 +258,10 @@ def configure_hermes(data_dir: str):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Install finance-agent skills into Hermes Agent.")
+    parser.add_argument("--data-dir", dest="data_dir", default=None, help="Path to the finance-agent data directory (skips interactive prompt)")
+    args = parser.parse_args()
+
     print("finance-agent → Hermes Agent setup")
     print("=" * 40)
 
@@ -264,9 +269,15 @@ def main():
         print(f"ERROR: skills directory not found at {SKILLS_SRC}")
         sys.exit(1)
 
-    default_data = str(REPO_ROOT / "data")
-    raw = input(f"\nData directory path [{default_data}]: ").strip()
-    data_dir = raw or default_data
+    if args.data_dir:
+        data_dir = str(Path(args.data_dir).expanduser().resolve())
+    else:
+        default_data = os.environ.get(
+            "FINANCE_AGENT_DATA_DIR",
+            str(Path.home() / ".config" / "finance_agent" / "data"),
+        )
+        raw = input(f"\nData directory path [{default_data}]: ").strip()
+        data_dir = str(Path(raw or default_data).expanduser().resolve())
 
     ok = install_mtool()
     if not ok:

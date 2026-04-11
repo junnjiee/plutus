@@ -14,11 +14,13 @@ Use this skill when the user wants to:
 
 ## Load the local finance context
 
-- If `data/` does not exist, direct the user to onboard using the `fa-onboard` skill.
-- Read `data/profile.json` first.
-- Read `data/liabilities.json` before making calculations or recommendations.
-- When the user reports a change, confirm the intended edit if it would overwrite or remove an existing item, then update `data/liabilities.json` immediately.
-- Use `.venv/bin/python` for date math when needed. If the environment is not ready yet, run `uv sync` first.
+Resolve the data directory first: use `FINANCE_AGENT_DATA_DIR` if set, otherwise `~/.config/finance_agent/data/`.
+
+- If the data directory does not exist, direct the user to onboard using the `fa-onboard` skill.
+- Read `profile.json` from the data directory first.
+- Read `liabilities.json` from the data directory before making calculations or recommendations.
+- When the user reports a change, confirm the intended edit if it would overwrite or remove an existing item, then update `liabilities.json` in the data directory immediately.
+- Use `python` for date math when needed.
 
 Rules:
 
