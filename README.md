@@ -62,7 +62,7 @@ You can send OpenClaw the link to this repo and get it to set up for you. After 
    ```
 
    The script will:
-   - Prompt for your data directory path (default: `<repo>/data`) — press Enter to accept
+   - Prompt for your data directory path (default: `~/.config/finance_agent/data/`) — press Enter to accept
    - Install `mtool` globally via `uv tool install --reinstall` (used for live ticker, history, and FX lookups)
    - Generate OpenClaw-flavored skill files into `~/.openclaw/skills/`
    - Write `FINANCE_AGENT_DATA_DIR` into `~/.openclaw/openclaw.json` under each skill's entry so OpenClaw injects the data path automatically
@@ -99,7 +99,7 @@ You can send Hermes the link to this repo and get it to set up for you. After se
    ```
 
    The script will:
-   - Prompt for your data directory path (default: `<repo>/data`) — press Enter to accept
+   - Prompt for your data directory path (default: `~/.config/finance_agent/data/`) — press Enter to accept
    - Install `mtool` globally via `uv tool install --reinstall` (used for live ticker, history, and FX lookups)
    - Generate Hermes-flavored skill files into `~/.hermes/skills/finance_agent/`
    - Write `finance_agent.data_dir` into `~/.hermes/config.yaml` so Hermes knows where your data lives

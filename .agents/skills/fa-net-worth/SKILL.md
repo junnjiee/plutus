@@ -9,10 +9,12 @@ Use this skill to show your user's net worth based on the data collected
 
 ## Load the local finance context
 
-- If `data/` does not exist, direct the user to onboard using the `fa-onboard` skill.
-- Read `data/profile.json` first.
-- Read `preferences` from `data/profile.json` before deciding how much detail to show.
-- Read `data/assets.json` and any other files that contain net worth related information.
+Resolve the data directory first: use `FINANCE_AGENT_DATA_DIR` if set, otherwise `~/.config/finance_agent/data/`.
+
+- If the data directory does not exist, direct the user to onboard using the `fa-onboard` skill.
+- Read `profile.json` from the data directory first.
+- Read `preferences` from `profile.json` before deciding how much detail to show.
+- Read `assets.json` and any other files in the data directory that contain net worth related information.
 
 ## Prepare pricing only when needed
 

@@ -15,9 +15,11 @@ The core rule is simple:
 
 ## Load the local finance context
 
-- If `data/` does not exist, direct the user to onboard using the `fa-onboard` skill.
-- Read `data/profile.json` first.
-- Read all current data files before making recommendations or calculations
+Resolve the data directory first: use `FINANCE_AGENT_DATA_DIR` if set, otherwise `~/.config/finance_agent/data/`.
+
+- If the data directory does not exist, direct the user to onboard using the `fa-onboard` skill.
+- Read `profile.json` from the data directory first.
+- Read all current data files from the data directory before making recommendations or calculations.
 
 ## Inputs and Normalization
 
@@ -128,7 +130,7 @@ Show:
 
 ## Preferences
 
-`data/profile.json` stores user preferences under `preferences`.
+`profile.json` (in the data directory) stores user preferences under `preferences`.
 
 Persist preferences when the user states them, for example:
 
