@@ -8,7 +8,6 @@ dependencies = [
     "matplotlib>=3.10.0",
     "pyperclip>=1.9.0",
     "questionary>=2.1.0",
-    "rich>=13.0.0",
     "typer>=0.24.0",
     "yfinance>=1.2.0",
 ]

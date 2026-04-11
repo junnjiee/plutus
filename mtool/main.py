@@ -4,18 +4,26 @@ import sys
 from pathlib import Path
 
 import typer
-from rich.console import Console
-
-console = Console()
 
 from mtool import expenses
-from mtool import market
 
 app = typer.Typer()
 app.add_typer(expenses.app, name="expenses")
-app.add_typer(market.app, name="market")
+
+# market imports yfinance/pandas which are heavy — skip them for `mtool update`
+# so the update command starts up fast without loading unused dependencies
+if len(sys.argv) < 2 or sys.argv[1] != "update":
+    from mtool import market
+
+    app.add_typer(market.app, name="market")
 
 GLOBAL_CONFIG = Path.home() / ".config" / "finance_agent" / "mtool.json"
+
+
+# do not push this to remote repo
+@app.command()
+def dev_mode():
+    """If you are seeing this, you are in development environment."""
 
 
 @app.command()
@@ -33,51 +41,55 @@ def update():
     # Check for uncommitted changes
     status = subprocess.run(
         ["git", "-C", str(repo_root), "status", "--porcelain"],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
     )
     has_changes = bool(status.stdout.strip())
 
     if has_changes:
-        with console.status("Stashing local changes..."):
-            stash = subprocess.run(
-                ["git", "-C", str(repo_root), "stash"],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            )
+        print("Stashing local changes...")
+        stash = subprocess.run(
+            ["git", "-C", str(repo_root), "stash"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         if stash.returncode != 0:
-            console.print("[red]Failed to stash changes.[/red]")
+            print("Failed to stash changes.")
             raise typer.Exit(1)
 
-    with console.status("Pulling latest changes from GitHub..."):
-        result = subprocess.run(
-            ["git", "-C", str(repo_root), "pull"],
-            capture_output=True, text=True,
-        )
+    print("Pulling latest changes from GitHub...")
+    result = subprocess.run(
+        ["git", "-C", str(repo_root), "pull"],
+        capture_output=True,
+        text=True,
+    )
     pull_failed = result.returncode != 0
     already_up_to_date = "Already up to date." in result.stdout
 
     if has_changes:
-        with console.status("Restoring stashed changes..."):
-            subprocess.run(
-                ["git", "-C", str(repo_root), "stash", "pop"],
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            )
+        print("Restoring stashed changes...")
+        subprocess.run(
+            ["git", "-C", str(repo_root), "stash", "pop"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
 
     if pull_failed:
-        console.print("[red]git pull failed.[/red]")
+        print("git pull failed.")
         raise typer.Exit(1)
 
     if already_up_to_date:
-        console.print("Already up to date.")
+        print("Already up to date.")
 
-    console.print("\nReinstalling mtool and refreshing skills...")
+    print("\nReinstalling mtool and refreshing skills...")
     result = subprocess.run(
         [sys.executable, str(repo_root / "setup.py"), "--update"],
     )
     if result.returncode != 0:
-        console.print("[red]Setup refresh failed.[/red]")
+        print("Setup refresh failed.")
         raise typer.Exit(1)
 
-    console.print("[green]Done.[/green]")
+    print("Done.")
 
 
 if __name__ == "__main__":

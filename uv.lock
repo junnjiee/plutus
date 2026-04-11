@@ -432,7 +432,6 @@ dependencies = [
     { name = "matplotlib" },
     { name = "pyperclip" },
     { name = "questionary" },
-    { name = "rich" },
     { name = "typer" },
     { name = "yfinance" },
 ]
@@ -442,7 +441,6 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.0" },
     { name = "pyperclip", specifier = ">=1.9.0" },
     { name = "questionary", specifier = ">=2.1.0" },
-    { name = "rich", specifier = ">=13.0.0" },
     { name = "typer", specifier = ">=0.24.0" },
     { name = "yfinance", specifier = ">=1.2.0" },
 ]
