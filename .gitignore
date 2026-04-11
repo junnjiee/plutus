@@ -1,6 +1,9 @@
 # app data
 data/
 
+# local setup state
+setup.json
+
 # dev
 __pycache__
 .venv

@@ -2,10 +2,12 @@
 setup.py — Interactive setup for finance-agent.
 
 Usage:
-    bash setup.sh
-    uv run python setup.py
+    bash setup.sh           # initial setup
+    bash setup.sh --update  # reinstall mtool + skills using saved config
 """
 
+import argparse
+import json
 import os
 import subprocess
 import sys
@@ -17,8 +19,19 @@ import questionary
 REPO_ROOT = Path(__file__).parent.resolve()
 GITHUB_REPO = "git+https://github.com/junnjiee/finance-agent.git"
 DEFAULT_DATA_DIR = str(Path.home() / ".config" / "finance_agent" / "data")
+SETUP_CONFIG = REPO_ROOT / "setup.json"
 
 HARNESS_CHOICE = "Coding harnesses (Claude Code, Codex, Opencode, etc.)"
+
+
+def tilde(path) -> str:
+    p = Path(path)
+    try:
+        return f"~/{p.relative_to(Path.home())}"
+    except ValueError:
+        return str(p)
+
+
 OPENCLAW_CHOICE = "OpenClaw"
 HERMES_CHOICE = "Hermes Agent"
 
@@ -38,8 +51,10 @@ def install_mtool() -> bool:
 
 
 def prompt_data_dir() -> str:
-    raw = input(f"\nData directory path [{DEFAULT_DATA_DIR}]: ").strip()
-    return str(Path(raw or DEFAULT_DATA_DIR).expanduser().resolve())
+    raw = input(
+        f"\nData directory path (leave blank to use default: {tilde(DEFAULT_DATA_DIR)}): "
+    ).strip()
+    return str(Path(raw or DEFAULT_DATA_DIR).expanduser())
 
 
 def show_env_export(data_dir: str):
@@ -61,6 +76,19 @@ def prompt_harnesses() -> list[str]:
     return selected or []
 
 
+def save_config(data_dir: str, selected: list[str]):
+    SETUP_CONFIG.write_text(
+        json.dumps({"data_dir": data_dir, "harnesses": selected}, indent=2)
+    )
+
+
+def load_config() -> dict:
+    if not SETUP_CONFIG.exists():
+        print("No saved setup config found. Run setup first: bash setup.sh")
+        sys.exit(1)
+    return json.loads(SETUP_CONFIG.read_text())
+
+
 def run_subscript(script: Path, data_dir: str):
     cmd = [sys.executable, str(script), "--data-dir", data_dir]
     result = subprocess.run(cmd)
@@ -68,43 +96,13 @@ def run_subscript(script: Path, data_dir: str):
         print(f"\n  WARNING: {script.name} exited with code {result.returncode}")
 
 
-def main():
-    print("finance-agent setup")
-    print("=" * 40)
-
-    if not REPO_ROOT.joinpath(".agents", "skills").exists():
-        print(
-            f"ERROR: skills directory not found at {REPO_ROOT / '.agents' / 'skills'}"
-        )
-        sys.exit(1)
-
-    # 1. Install mtool
-    if not install_mtool():
-        print("\nSetup cannot continue without mtool.")
-        sys.exit(1)
-
-    # 2. Data directory
-    data_dir = prompt_data_dir()
-
-    # 3. Env var instructions (only when non-default)
-    if data_dir != str(Path(DEFAULT_DATA_DIR).expanduser().resolve()):
-        show_env_export(data_dir)
-
-    # 4. Harness selection
-    selected = prompt_harnesses()
-    if not selected:
-        print("\nNothing selected — nothing else to do.")
-        print("Run this script again any time to update your setup.")
-        return
-
-    print()
-
-    # 5. Coding harnesses — nothing extra needed
+def run_harnesses(data_dir: str, selected: list[str]):
     if HARNESS_CHOICE in selected:
-        print("Coding harnesses: open your harness in this directory and you're ready.")
-        print(f"  Data directory: {data_dir}")
+        print(
+            f"Coding harnesses: open your agentic harness in the finance_agent project directory ({tilde(REPO_ROOT)})."
+        )
+        print(f"  Data directory: {tilde(data_dir)}")
 
-    # 6. OpenClaw
     if OPENCLAW_CHOICE in selected:
         openclaw_home = Path(os.environ.get("OPENCLAW_HOME", Path.home() / ".openclaw"))
         if openclaw_home.exists():
@@ -112,10 +110,9 @@ def main():
             run_subscript(REPO_ROOT / "openclaw" / "setup.py", data_dir)
         else:
             print(
-                f"\nSkipping OpenClaw: {openclaw_home} not found. Install OpenClaw first."
+                f"\nSkipping OpenClaw: {tilde(openclaw_home)} not found. Install OpenClaw first."
             )
 
-    # 7. Hermes
     if HERMES_CHOICE in selected:
         hermes_home = Path(os.environ.get("HERMES_HOME", Path.home() / ".hermes"))
         if hermes_home.exists():
@@ -123,9 +120,65 @@ def main():
             run_subscript(REPO_ROOT / "hermes" / "setup.py", data_dir)
         else:
             print(
-                f"\nSkipping Hermes: {hermes_home} not found. Install Hermes Agent first."
+                f"\nSkipping Hermes: {tilde(hermes_home)} not found. Install Hermes Agent first."
             )
 
+
+def main():
+    parser = argparse.ArgumentParser(description="finance-agent setup")
+    parser.add_argument(
+        "--update",
+        action="store_true",
+        help="Reinstall mtool and skills using saved config",
+    )
+    args = parser.parse_args()
+
+    print("finance-agent setup")
+    print("=" * 40)
+
+    if not REPO_ROOT.joinpath(".agents", "skills").exists():
+        print(
+            f"ERROR: skills directory not found at {tilde(REPO_ROOT / '.agents' / 'skills')}"
+        )
+        sys.exit(1)
+
+    if args.update:
+        config = load_config()
+        data_dir = config["data_dir"]
+        selected = config["harnesses"]
+        print(f"\nUsing saved config: {tilde(SETUP_CONFIG)}")
+        print(f"  Data directory : {tilde(data_dir)}")
+        print(f"  Harnesses      : {', '.join(selected) or 'none'}")
+    else:
+        # 1. Install mtool
+        if not install_mtool():
+            print("\nSetup cannot continue without mtool.")
+            sys.exit(1)
+
+        # 2. Data directory
+        data_dir = prompt_data_dir()
+
+        # 3. Env var instructions (only when non-default)
+        if data_dir != str(Path(DEFAULT_DATA_DIR).expanduser()):
+            show_env_export(data_dir)
+
+        # 4. Harness selection
+        selected = prompt_harnesses()
+        if not selected:
+            print("\nNothing selected — nothing else to do.")
+            print("Run this script again any time to update your setup.")
+            return
+
+        save_config(data_dir, selected)
+
+    print()
+
+    if args.update:
+        if not install_mtool():
+            print("\nUpdate failed: could not reinstall mtool.")
+            sys.exit(1)
+
+    run_harnesses(data_dir, selected)
     print("\nDone.")
 
 
