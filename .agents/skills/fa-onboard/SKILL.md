@@ -35,8 +35,6 @@ Collect the following in order, skipping sections if they are not relevant to th
    Capture recurring obligations such as subscriptions, insurance, and loan repayments.
 6. **Goals**
    Capture any financial goals with target amounts and dates.
-7. **Intended Use**
-   Ask what the user primarily wants finance-agent to help with, which topics should be prioritized by default, and how much detail they want in responses.
 
 ## Data Collection Rules
 
@@ -58,13 +56,6 @@ Create or update the base files in the data directory:
 - `goals.json`
 
 Only create the files that are relevant to the information the user has actually provided. If a section is not yet known, it can be omitted until later.
-
-## Logging Intended Use
-
-- Store intended-use information in `profile.json` under `preferences`, not as a separate top-level field.
-- At minimum, capture `intended_use` as a short summary of how the user wants to use finance-agent.
-- Add other flat, descriptive keys only when they will help future behavior, for example `default_focus`, `response_style`, or `calculation_detail`.
-- Later skills should read these preferences before choosing defaults, deciding what analyses to prioritize, or shaping how results are presented.
 
 ## Schema Guidance
 
@@ -106,10 +97,10 @@ Notes:
 }
 ```
 
-Notes:
+Remember:
 
 - Use either `balance` or `holdings` as the main valuation source for an asset.
-- `holdings` is mainly for units-based investment assets.
+- Always recommend `holdings` for units-based investment assets like stocks and crypto.
 - Add fields only when they help later analysis.
 
 **cashflow.json**
