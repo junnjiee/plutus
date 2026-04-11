@@ -3,7 +3,7 @@ name = "finance_agent"
 version = "0.7.0"
 description = "CLI built around finance_agent"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
     "matplotlib>=3.10.0",
     "pyperclip>=1.9.0",

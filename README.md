@@ -5,18 +5,19 @@
 Personal finance apps make you fit their boxes. Fixed categories, manual updates, rigid workflows. Finance Agent flips it: just _talk_ about your money and it handles the rest.
 
 ```
-> What's my financial status looking like?
+> What's my investment portfolio looking like?
 > Show me the optimal drawdown strategy to maximise living off my savings
-> I just bought 50 shares of VOO
+> I just bought chicken rice for $4.50
 ```
 
-Fetch live prices using a dedicated CLI tool, run spending simulations, ask for advice, create custom visualizations, and more.
+Check portfolio performance, track expenses, run spending simulations, ask it whether you can afford that trip to San Francisco, and more...
 
 ## What It Does
 
 - **Net worth tracking** with live portfolio pricing and multi-currency support
+- **Savings rate** and **subscriptions tracking**
 - **Runway projections** — simulate how long you can live off your savings/investments
-- **Savings rate** and **liability/subscriptions tracking** computed from your actual data
+- **Expense tracking** — log and categorize individual expenses, view monthly summaries and trends
 - **Financial goals** with progress tracking and required contribution calculations
 - **More coming** - suggest features!
 
@@ -25,8 +26,8 @@ Fetch live prices using a dedicated CLI tool, run spending simulations, ask for 
 ### Prerequisites
 
 - [`uv`](https://docs.astral.sh/uv/) installed
-- Python 3.13 or later
-- The harness(es) you want to use: [OpenClaw](https://openclaw.ai), [Hermes Agent](https://hermes.example.com), or any agentic coding harness
+- Python 3.10 or later
+- Your AI Agent: [OpenClaw](https://openclaw.ai), [Hermes Agent](https://hermes.example.com), or any agent harness (Claude Code, Codex, etc.)
 
 ### Setup
 
@@ -38,14 +39,15 @@ Fetch live prices using a dedicated CLI tool, run spending simulations, ask for 
    bash setup.sh
    ```
 
-   The script will:
-   - Install `mtool` globally (used for live ticker, history, and FX lookups)
-   - Prompt for your data directory (default: `~/.config/finance_agent/data/`)
-   - Ask which harnesses you use and configure each one
-
 2. **Start using it**
-   - **Coding harnesses**: open your harness in the project directory and say hi, or run `/fa-onboard`
-   - **OpenClaw / Hermes**: tell it `I want to start using finance agent`
+
+**OpenClaw / Hermes**: just tell it
+
+```
+I want to start using finance agent for my personal finance
+```
+
+**Agent Harnesses (CC, Codex, etc.)**: open your harness in the project directory and say hi!
 
 ### Updating
 
@@ -57,4 +59,4 @@ All suggestions and contributions welcome. Submit an issue if you have any sugge
 
 ---
 
-> **Disclaimer**: This is not licensed financial advice.
+> **Disclaimer**: Financial advice that AI gives are not licensed.
