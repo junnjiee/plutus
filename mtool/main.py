@@ -20,12 +20,6 @@ if len(sys.argv) < 2 or sys.argv[1] != "update":
 GLOBAL_CONFIG = Path.home() / ".config" / "finance_agent" / "mtool.json"
 
 
-# do not push this to remote repo
-@app.command()
-def dev_mode():
-    """If you are seeing this, you are in development environment."""
-
-
 @app.command()
 def update():
     """Pull the latest changes from GitHub and refresh skills."""
