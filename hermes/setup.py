@@ -204,8 +204,8 @@ def install_skills(data_dir: str):
         print(f"  Updated:   {', '.join(updated)}")
     if installed:
         print(f"  Installed: {', '.join(installed)}")
-    if unchanged:
-        print(f"  Unchanged: {', '.join(unchanged)}")
+    if not updated and not installed:
+        print("  All skills up to date")
 
 
 def configure_hermes(data_dir: str):
