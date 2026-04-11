@@ -173,16 +173,12 @@ def install_skills():
         if not dest.exists():
             dest.write_text(generated)
             installed.append(skill_name)
-            print(f"  installed  /{skill_name}")
         elif dest.read_text() == generated:
             unchanged.append(skill_name)
-            print(f"  unchanged  /{skill_name}")
         else:
             dest.write_text(generated)
             updated.append(skill_name)
-            print(f"  updated    /{skill_name}")
 
-    print()
     if updated:
         print(f"  Updated:   {', '.join(updated)}")
     if installed:

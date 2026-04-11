@@ -194,16 +194,12 @@ def install_skills(data_dir: str):
         if not dest.exists():
             dest.write_text(generated)
             installed.append(skill_name)
-            print(f"  installed  /{skill_name}")
         elif dest.read_text() == generated:
             unchanged.append(skill_name)
-            print(f"  unchanged  /{skill_name}")
         else:
             dest.write_text(generated)
             updated.append(skill_name)
-            print(f"  updated    /{skill_name}")
 
-    print()
     if updated:
         print(f"  Updated:   {', '.join(updated)}")
     if installed:
@@ -242,8 +238,9 @@ def configure_hermes(data_dir: str):
             f"\\1{quoted_dir}",
             existing,
         )
-        HERMES_CONFIG.write_text(updated)
-        print(f"\n  updated    finance_agent.data_dir → {data_dir}")
+        if updated != existing:
+            HERMES_CONFIG.write_text(updated)
+            print(f"\n  updated    finance_agent.data_dir → {data_dir}")
         return
 
     # Case: skills: key exists but no finance_agent block.
