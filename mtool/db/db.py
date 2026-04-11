@@ -16,7 +16,7 @@ MIGRATIONS = [
             merchant    TEXT,
             description TEXT,
             account     TEXT,
-            created_at  TEXT NOT NULL DEFAULT (date('now'))
+            created_at  TEXT NOT NULL DEFAULT (datetime('now'))
         )
     """,
 ]
