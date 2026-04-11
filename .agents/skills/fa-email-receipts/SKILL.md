@@ -1,6 +1,6 @@
 ---
 name: fa-email-receipts
-description: Import expenses from email receipts. Use when the user wants to find receipts in email, check email for purchases, scan inbox for receipts, or says things like "check my email for expenses", "find receipts in my inbox", or "import expenses from email".
+description: Scan inbox for purchase receipts, parse expense details, and log them after user review. Use when the user wants to import expenses from email, check their inbox for purchases or receipts, or says things like "check my email for expenses", "find receipts from my email", "scan my inbox for expenses and receipts", "what did I buy recently", "import my expenses from email", "log email purchases".
 ---
 
 # Email Receipt Importer
