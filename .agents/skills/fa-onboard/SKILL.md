@@ -14,7 +14,7 @@ Resolve the data directory before any file operations: use `FINANCE_AGENT_DATA_D
 ## Working Style
 
 - Read any existing files in the data directory before asking questions so you do not overwrite information the user already provided.
-- Ask whether the user wants to provide everything at once or step by step, then match that pace.
+- Always go step by step with the user. Collect one section at a time, wait for their response, then move to the next.
 - Accept natural language input. Do not force a rigid template unless the user asks for one.
 - Keep a running summary of what has been captured so far.
 - Before writing files, show the full summary and get explicit confirmation.
