@@ -1,6 +1,6 @@
 ---
 name: fa-expense-tracker
-description: Log, edit, delete, and analyze individual expenses. Use when the user wants to add an expense, view spending summaries, check category breakdowns, or review spending trends. Defaults to the current month (MTD).
+description: Log, edit, delete, and analyze individual expenses. Use when the user wants to add an expense, log a purchase, look at their expenses, view spending summaries, check category breakdowns, review spending trends, ask what they spent, ask how much they spent, ask about a specific category or merchant, or says things like "add an expense", "log a purchase", "what did I spend", "how much did I spend on X", "show my expenses", "show my spending", "what have I bought", "spending this month", "top categories", "where did my money go", "did I spend on X", "delete an expense", "edit an expense", "update an expense". Defaults to the current month (MTD).
 ---
 
 # Expense Tracker
@@ -9,6 +9,10 @@ Use this skill to manage and analyze individual expenses. It covers two responsi
 
 - **CRUD**: log, update, and delete expenses via the CLI
 - **Analysis**: summaries, category breakdowns, top merchants, trends, and budget comparison
+
+## Critical: Use mtool, Not Raw SQLite
+
+**ALL expense data access MUST go through `mtool expenses`.** Never query the underlying SQLite database directly (e.g. no `sqlite3` calls, no reading `.db` files). `mtool` is the single source of truth interface — it handles schema changes, currency, and filtering correctly. Bypassing it will produce incorrect or incomplete results.
 
 ## Load Context
 

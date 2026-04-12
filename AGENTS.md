@@ -78,9 +78,11 @@ These are known failure modes. Apply them globally, regardless of which skill is
 
 - Do not silently guess missing exchange rates, liability balances, or ticker symbols. Surface uncertainty to the user explicitly.
 
-### Expense Questions Without Checking Logged Data
+### Expense Questions Without Using the Skill and mtool
 
-- Any question about expenses — what was spent, when, on what, how much — requires fetching the logged expenses first: `mtool expenses list`.
+- Any question about expenses — what was spent, when, on what, how much — must be handled via the `fa-expense-tracker` skill.
+- Always load `fa-expense-tracker` before reading, listing, adding, editing, or deleting expenses.
+- Fetch data with `mtool expenses list`. Never query the SQLite database directly (no `sqlite3` calls, no reading `.db` files). `mtool` is the only sanctioned interface for expense data.
 - Never answer from memory or context alone. Logged expenses are the source of truth.
 
 ## Market Data Caching
