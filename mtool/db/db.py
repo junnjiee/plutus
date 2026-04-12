@@ -19,7 +19,29 @@ MIGRATIONS = [
             created_at  TEXT NOT NULL DEFAULT (datetime('now'))
         )
     """,
-    "ALTER TABLE expenses ADD COLUMN email_id TEXT UNIQUE",
+    "ALTER TABLE expenses ADD COLUMN email_id TEXT",
+    "CREATE UNIQUE INDEX IF NOT EXISTS idx_expenses_email_id ON expenses(email_id) WHERE email_id IS NOT NULL",
+    """
+        CREATE TABLE IF NOT EXISTS splits (
+            id              INTEGER PRIMARY KEY,
+            name            TEXT NOT NULL,
+            date            TEXT NOT NULL,
+            total_amount    REAL NOT NULL,
+            currency        TEXT NOT NULL,
+            split_type      TEXT NOT NULL,
+            created_at      TEXT NOT NULL DEFAULT (datetime('now'))
+        )
+    """,
+    """
+        CREATE TABLE IF NOT EXISTS split_participants (
+            id                   INTEGER PRIMARY KEY,
+            split_id             INTEGER NOT NULL REFERENCES splits(id) ON DELETE CASCADE,
+            name                 TEXT NOT NULL,
+            original_amount_owed REAL NOT NULL,
+            amount_owed          REAL NOT NULL,
+            created_at           TEXT NOT NULL DEFAULT (datetime('now'))
+        )
+    """,
 ]
 
 
@@ -70,6 +92,7 @@ def get_db() -> sqlite3.Connection:
     conn = sqlite3.connect(_db_path())
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA foreign_keys=ON")
     try:
         _migrate(conn)
     except Exception:
