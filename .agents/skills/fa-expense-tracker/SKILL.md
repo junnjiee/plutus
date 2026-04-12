@@ -10,10 +10,6 @@ Use this skill to manage and analyze individual expenses. It covers two responsi
 - **CRUD**: log, update, and delete expenses via the CLI
 - **Analysis**: summaries, category breakdowns, top merchants, trends, and budget comparison
 
-## Critical: Use mtool, Not Raw SQLite
-
-**ALL expense data access MUST go through `mtool expenses`.** Never query the underlying SQLite database directly (e.g. no `sqlite3` calls, no reading `.db` files). `mtool` is the single source of truth interface — it handles schema changes, currency, and filtering correctly. Bypassing it will produce incorrect or incomplete results.
-
 ## Load Context
 
 Resolve the data directory first: use `FINANCE_AGENT_DATA_DIR` if set, otherwise `~/.config/finance_agent/data/`.
