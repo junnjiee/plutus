@@ -1,0 +1,12 @@
+name: finance-agent
+version: 0.7.0
+description: Tools and skills to help manage personal finances
+author: junnjiee
+provides_tools:
+  - finance_agent_get_ticker_data
+  - finance_agent_get_ticker_history
+  - finance_agent_add_expense
+  - finance_agent_list_expenses
+  - finance_agent_get_expense_by_email_id
+  - finance_agent_update_expense
+  - finance_agent_delete_expense
