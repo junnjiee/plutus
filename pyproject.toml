@@ -1,14 +1,10 @@
 [project]
 name = "finance_agent"
 version = "0.7.0"
-description = "CLI built around finance_agent"
+description = "Turn your agent into a personal finance assistant"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "matplotlib>=3.10.0",
-    "pyperclip>=1.9.0",
-    "questionary>=2.1.0",
-    "typer>=0.24.0",
     "yfinance>=1.2.0",
 ]
 
@@ -20,7 +16,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["mtool"]
-
-[project.scripts]
-mtool = "mtool.main:app"
+packages = ["core", "hermes"]

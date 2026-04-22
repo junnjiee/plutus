@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date as calendar_date
 
 from core.db import get_db
 
@@ -8,14 +8,14 @@ def add_expense(
     currency: str,
     name: str,
     *,
-    expense_date: str | None = None,
+    date: str | None = None,
     category: str | None = None,
     merchant: str | None = None,
     description: str | None = None,
     account: str | None = None,
     email_id: str | None = None,
 ) -> dict:
-    expense_date = expense_date or str(date.today())
+    date = date or str(calendar_date.today())
     with get_db() as conn:
         cursor = conn.execute(
             """
@@ -23,7 +23,7 @@ def add_expense(
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                expense_date,
+                date,
                 amount,
                 currency,
                 name,
@@ -126,4 +126,3 @@ def delete_expense(id: int) -> bool:
         cursor = conn.execute("DELETE FROM expenses WHERE id = ?", (id,))
         conn.commit()
         return cursor.rowcount > 0
-
