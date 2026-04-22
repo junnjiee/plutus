@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
-import sys
 
 import typer
 
@@ -12,9 +12,14 @@ from mtool.constants import GITHUB_REPO
 
 def update():
     """Pull the latest version from GitHub and refresh skills."""
+    uv = shutil.which("uv")
+    if uv is None:
+        print("uv not found. Install uv first: https://docs.astral.sh/uv/")
+        raise typer.Exit(1)
+
     print("Updating mtool...")
     result = subprocess.run(
-        [sys.executable, "-m", "uv", "pip", "install", "--upgrade", GITHUB_REPO],
+        [uv, "tool", "upgrade", "finance_agent"],
         capture_output=True,
         text=True,
     )

@@ -62,14 +62,29 @@ def _configure(data_dir: str, hermes_home: Path):
             config_path.write_text(updated)
             print(f"  updated    finance_agent.data_dir → {data_dir}")
     else:
-        fa_entry = f"    finance_agent:\n      data_dir: {quoted}\n"
+        fa_block = f"  config:\n    finance_agent:\n      data_dir: {quoted}\n"
+        # Try inserting under existing config: key
         updated = re.sub(
-            r"(^  config\s*:\n)",
-            r"\1" + fa_entry,
+            r"(^  config\s*:[ \t]*\n)",
+            r"\1" + f"    finance_agent:\n      data_dir: {quoted}\n",
             existing,
             count=1,
             flags=re.MULTILINE,
         )
+        # If no config: key, inject it under skills:
+        if updated == existing:
+            updated = re.sub(
+                r"(^skills\s*:[ \t]*\n)",
+                r"\1" + fa_block,
+                existing,
+                count=1,
+                flags=re.MULTILINE,
+            )
+        if updated == existing:
+            raise RuntimeError(
+                f"Could not inject finance_agent config into {config_path}. "
+                "Expected a 'skills:' section."
+            )
         config_path.write_text(updated)
         print(f"  installed  finance_agent.data_dir → {data_dir}")
 
