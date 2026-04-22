@@ -4,11 +4,10 @@ import sys
 from pathlib import Path
 import typer
 
-from mtool import expenses, splits
+from mtool import expenses
 
 app = typer.Typer()
 app.add_typer(expenses.app, name="expenses")
-app.add_typer(splits.app, name="splits")
 
 # market imports yfinance/pandas which are heavy — skip them for `mtool update`
 # so the update command starts up fast without loading unused dependencies
