@@ -1,6 +1,6 @@
 # Finance Agent
 
-**Your personal finance, managed through ~forms and dashboards~ conversation. Works with Hermes Agent, OpenClaw, and agentic coding harnesses.**
+**Your personal finance, managed through ~forms and dashboards~ conversation. Works with Hermes Agent.**
 
 Personal finance apps make you fit their boxes. Fixed categories, manual updates, rigid workflows. Finance Agent flips it: just _talk_ about your money and it handles the rest.
 
@@ -12,54 +12,47 @@ Personal finance apps make you fit their boxes. Fixed categories, manual updates
 
 Check portfolio performance, track expenses, run spending simulations, ask it whether you can afford that trip to San Francisco, and more...
 
-## What It Does
-
-- **Net worth tracking** with live portfolio pricing and multi-currency support
-- **Savings rate** and **subscriptions tracking**
-- **Runway projections** — simulate how long you can live off your savings/investments
-- **Expense tracking** — log and categorize individual expenses, view monthly summaries and trends
-- **Financial goals** with progress tracking and required contribution calculations
-- **More coming** - suggest features!
-
 ## Get Started
-
-You can ask your OpenClaw/Hermes Agent to set this up for you!
 
 ### Prerequisites
 
 - [`uv`](https://docs.astral.sh/uv/) installed
 - Python 3.10 or later
-- Your AI Agent: [OpenClaw](https://openclaw.ai), [Hermes Agent](https://hermes.example.com), or any agent harness (Claude Code, Codex, etc.)
+- [Hermes Agent](https://hermes.example.com)
+
+### Installation
+
+```bash
+uv tool install git+https://github.com/junnjiee/finance-agent.git
+```
 
 ### Setup
 
-1. **Clone the repo and run setup**
+Install skills into your harness:
 
-   ```bash
-   git clone https://github.com/junnjiee/finance-agent.git
-   cd finance-agent
-   bash setup.sh
-   ```
+```bash
+mtool setup hermes
+```
 
-2. **Start using it**
+Or run `mtool setup` to be guided through the process.
 
-**OpenClaw / Hermes**: just tell it
+By default, finance data is stored in `~/.config/finance_agent/data/`. To use a custom location, set the `FINANCE_AGENT_DATA_DIR` environment variable.
+
+### Start using it
+
+Just tell Hermes:
 
 ```
 I want to start using finance agent for my personal finance
 ```
 
-**Agent Harnesses (CC, Codex, etc.)**: open your harness in the project directory and say hi!
-
 ### Updating
-
-Once set up, just run:
 
 ```bash
 mtool update
 ```
 
-This pulls the latest changes from GitHub and refreshes `mtool` and skills automatically. Alternatively, re-run `bash setup.sh --update` manually.
+This reinstalls `mtool` from GitHub and refreshes skills in all configured harnesses.
 
 ## Contributing
 
