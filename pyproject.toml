@@ -1,7 +1,7 @@
 [project]
-name = "finance_agent"
+name = "plutus"
 version = "0.7.0"
-description = "CLI built around finance_agent"
+description = "CLI built around plutus"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
