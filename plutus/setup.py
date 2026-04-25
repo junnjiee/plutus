@@ -39,8 +39,6 @@ def _run_saved():
         raise typer.Exit(1)
 
     data_dir = _get_data_dir()
-    print(f"Re-installing skills (data dir: {data_dir})")
-
     if "hermes" in config.get("harnesses", []):
         hermes.install(data_dir)
 
