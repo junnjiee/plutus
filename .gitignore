@@ -1,12 +1,5 @@
-# app data
-data/
-
-# local setup state
-setup.json
-
-# dev
 __pycache__
+.pytest_cache
 .venv
-
-# symlinks
-.claude
+.coverage
+.conductor
