@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plutus — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;510;590;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════
+       PLUTUS DESIGN TOKENS — CSS Custom Properties
+       ═══════════════════════════════════════════════ */
+    :root {
+      /* Colors */
+      --color-primary: #08090A;
+      --color-neutral: #0F1011;
+      --color-surface: #16181B;
+      --color-surface-elevated: #1E2024;
+      --color-tertiary: #D4A843;
+      --color-gold-dim: #9E7B2D;
+      --color-gold-bright: #F5D878;
+      --color-on-primary: #F0F1F3;
+      --color-on-surface: #D0D6E0;
+      --color-on-secondary: #62666D;
+      --color-success: #2DA44E;
+      --color-danger: #E23B4A;
+      --color-warning: #D29922;
+      --color-info: #58A6FF;
+      --color-border-subtle: rgba(255,255,255,0.05);
+      --color-border-standard: rgba(255,255,255,0.08);
+      --color-border-strong: rgba(255,255,255,0.12);
+
+      /* Rounded */
+      --rounded-xs: 2px;
+      --rounded-sm: 4px;
+      --rounded-md: 6px;
+      --rounded-lg: 8px;
+      --rounded-xl: 12px;
+      --rounded-2xl: 16px;
+      --rounded-full: 9999px;
+
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      --space-3xl: 64px;
+
+      /* Typography */
+      --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+      --font-features: 'cv01', 'ss03';
+
+      /* Shadows */
+      --shadow-dropdown: rgba(0,0,0,0.3) 0px 4px 16px;
+      --shadow-modal: rgba(0,0,0,0.4) 0px 8px 32px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      font-feature-settings: var(--font-features);
+      background: var(--color-primary);
+      color: var(--color-on-surface);
+      line-height: 1.55;
+      font-size: 0.875rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ═══════════════════════════════════════════════
+       LAYOUT
+       ═══════════════════════════════════════════════ */
+    .page-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      min-height: 100vh;
+      background: var(--color-neutral);
+      border-right: 1px solid var(--color-border-subtle);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+
+    .content {
+      margin-left: 260px;
+      flex: 1;
+      padding: var(--space-2xl) var(--space-3xl);
+      max-width: 1100px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SIDEBAR — Brand + Nav
+       ═══════════════════════════════════════════════ */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xl);
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--color-tertiary);
+      border-radius: var(--rounded-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 590;
+      color: var(--color-primary);
+    }
+
+    .brand-name {
+      font-size: 1.125rem;
+      font-weight: 590;
+      color: var(--color-on-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-section-label {
+      font-size: 0.6875rem;
+      font-weight: 510;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-on-secondary);
+      margin-bottom: var(--space-sm);
+      margin-top: var(--space-lg);
+    }
+
+    .nav-section-label:first-of-type {
+      margin-top: 0;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 8px 12px;
+      border-radius: var(--rounded-md);
+      color: var(--color-on-secondary);
+      font-size: 0.8125rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--color-on-primary);
+    }
+
+    .nav-item.active {
+      background: rgba(212,168,67,0.08);
+      color: var(--color-tertiary);
+      font-weight: 510;
+    }
+
+    .nav-item .icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+    }
+
+    .nav-item.active .icon {
+      opacity: 1;
+    }
+
+    /* ═══════════════════════════════════════════════
+       TYPOGRAPHY CLASSES
+       ═══════════════════════════════════════════════ */
+    .t-display-xl {
+      font-family: var(--font-sans);
+      font-size: 4rem;
+      font-weight: 510;
+      line-height: 1.05;
+      letter-spacing: -1.28px;
+      color: var(--color-on-primary);
+    }
+
+    .t-display {
+      font-family: var(--font-sans);
+      font-size: 2.5rem;
+      font-weight: 510;
+      line-height: 1.1;
+      letter-spacing: -0.8px;
+      color: var(--color-on-primary);
+    }
+
+    .t-h1 {
+      font-family: var(--font-sans);
+      font-size: 1.75rem;
+      font-weight: 590;
+      line-height: 1.2;
+      letter-spacing: -0.48px;
+      color: var(--color-on-primary);
+    }
+
+    .t-h2 {
+      font-family: var(--font-sans);
+      font-size: 1.25rem;
+      font-weight: 510;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
+      color: var(--color-on-primary);
+    }
+
+    .t-h3 {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 590;
+      line-height: 1.4;
+      letter-spacing: -0.08px;
+      color: var(--color-on-primary);
+    }
+
+    .t-body-lg {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-on-surface);
+    }
+
+    .t-body-md {
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--color-on-surface);
+    }
+
+    .t-body-sm {
+      font-size: 0.8125rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--color-on-surface);
+    }
+
+    .t-label-caps {
+      font-family: var(--font-sans);
+      font-size: 0.6875rem;
+      font-weight: 510;
+      line-height: 1.4;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-on-secondary);
+    }
+
+    .t-mono-value {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.4;
+      font-feature-settings: 'tnum';
+      color: var(--color-on-primary);
+    }
+
+    .t-mono-caps {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-on-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       SECTION LAYOUT
+       ═══════════════════════════════════════════════ */
+    .section {
+      margin-bottom: var(--space-3xl);
+    }
+
+    .section-header {
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .section-header .t-label-caps {
+      margin-bottom: var(--space-xs);
+    }
+
+    .subsection {
+      margin-bottom: var(--space-xl);
+    }
+
+    .subsection-label {
+      margin-bottom: var(--space-md);
+    }
+
+    .subsection-label .t-h3 {
+      margin-bottom: 2px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+    }
+
+    .flex-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .flex-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    /* ═══════════════════════════════════════════════
+       CARD
+       ═══════════════════════════════════════════════ */
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-standard);
+      border-radius: var(--rounded-xl);
+      padding: 20px;
+    }
+
+    .card-elevated {
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border-standard);
+      border-radius: var(--rounded-xl);
+      padding: 20px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       STAT CARD
+       ═══════════════════════════════════════════════ */
+    .stat-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-standard);
+      border-radius: var(--rounded-lg);
+      padding: 20px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.6875rem;
+      font-weight: 510;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-on-secondary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .stat-card .stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.75rem;
+      font-weight: 500;
+      font-feature-settings: 'tnum';
+      color: var(--color-on-primary);
+      line-height: 1.2;
+      letter-spacing: -0.48px;
+    }
+
+    .stat-card .stat-change {
+      font-size: 0.75rem;
+      font-weight: 510;
+      margin-top: var(--space-xs);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-change.positive { color: var(--color-success); }
+    .stat-change.negative { color: var(--color-danger); }
+    .stat-change.neutral { color: var(--color-on-secondary); }
+
+    /* ═══════════════════════════════════════════════
+       BUTTONS
+       ═══════════════════════════════════════════════ */
+    .btn {
+      font-family: var(--font-sans);
+      font-feature-settings: var(--font-features);
+      font-size: 0.875rem;
+      font-weight: 510;
+      line-height: 1.4;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid rgba(212,168,67,0.5);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: var(--color-tertiary);
+      color: var(--color-primary);
+      border-radius: var(--rounded-md);
+      padding: 8px 16px;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-gold-bright);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.04);
+      color: var(--color-on-primary);
+      border: 1px solid var(--color-border-standard);
+      border-radius: var(--rounded-md);
+      padding: 8px 16px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--color-on-surface);
+      border-radius: var(--rounded-md);
+      padding: 6px 10px;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .btn-danger {
+      background: rgba(226,59,74,0.12);
+      color: var(--color-danger);
+      border-radius: var(--rounded-md);
+      padding: 8px 16px;
+    }
+
+    .btn-danger:hover {
+      background: rgba(226,59,74,0.2);
+    }
+
+    .btn-sm {
+      font-size: 0.8125rem;
+      padding: 5px 10px;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border-radius: var(--rounded-md);
+    }
+
+    /* ═══════════════════════════════════════════════
+       BADGES
+       ═══════════════════════════════════════════════ */
+    .badge {
+      font-family: var(--font-sans);
+      font-feature-settings: var(--font-features);
+      font-size: 0.75rem;
+      font-weight: 510;
+      line-height: 1.4;
+      border-radius: var(--rounded-full);
+      padding: 2px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .badge-gold {
+      background: rgba(212,168,67,0.12);
+      color: var(--color-tertiary);
+    }
+
+    .badge-success {
+      background: rgba(45,164,78,0.12);
+      color: var(--color-success);
+    }
+
+    .badge-danger {
+      background: rgba(226,59,74,0.12);
+      color: var(--color-danger);
+    }
+
+    .badge-neutral {
+      background: rgba(255,255,255,0.06);
+      color: var(--color-on-surface);
+    }
+
+    .badge-warning {
+      background: rgba(210,153,34,0.12);
+      color: var(--color-warning);
+    }
+
+    .badge-info {
+      background: rgba(88,166,255,0.12);
+      color: var(--color-info);
+    }
+
+    /* ═══════════════════════════════════════════════
+       INPUTS
+       ═══════════════════════════════════════════════ */
+    .input {
+      font-family: var(--font-sans);
+      font-feature-settings: var(--font-features);
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.5;
+      background: rgba(255,255,255,0.03);
+      color: var(--color-on-primary);
+      border: 1px solid var(--color-border-standard);
+      border-radius: var(--rounded-md);
+      padding: 10px 12px;
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+
+    .input::placeholder {
+      color: var(--color-on-secondary);
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: rgba(212,168,67,0.5);
+      box-shadow: 0 0 0 3px rgba(212,168,67,0.1);
+    }
+
+    .input-label {
+      font-size: 0.8125rem;
+      font-weight: 510;
+      color: var(--color-on-surface);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--color-on-secondary);
+      margin-top: 4px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    select.input {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238A8F98' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       TABLE
+       ═══════════════════════════════════════════════ */
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--color-border-standard);
+      border-radius: var(--rounded-xl);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      font-size: 0.6875rem;
+      font-weight: 510;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-on-secondary);
+      padding: 12px 16px;
+      text-align: left;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border-subtle);
+      position: sticky;
+      top: 0;
+    }
+
+    thead th.right { text-align: right; }
+
+    tbody td {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--color-on-surface);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    tbody td.right {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-feature-settings: 'tnum';
+      font-weight: 500;
+    }
+
+    tbody td.mono {
+      font-family: var(--font-mono);
+      font-feature-settings: 'tnum';
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-on-primary);
+    }
+
+    tbody tr {
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ═══════════════════════════════════════════════
+       COLOR SWATCHES
+       ═══════════════════════════════════════════════ */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .swatch {
+      border-radius: var(--rounded-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border-standard);
+    }
+
+    .swatch-color {
+      height: 56px;
+    }
+
+    .swatch-info {
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-surface);
+    }
+
+    .swatch-name {
+      font-size: 0.75rem;
+      font-weight: 510;
+      color: var(--color-on-primary);
+      margin-bottom: 2px;
+    }
+
+    .swatch-value {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--color-on-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       TYPE SPECIMEN
+       ═══════════════════════════════════════════════ */
+    .type-specimen {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .type-specimen:last-child {
+      border-bottom: none;
+    }
+
+    .type-meta {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--color-on-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       SPACING DEMO
+       ═══════════════════════════════════════════════ */
+    .spacing-demo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-sm) 0;
+    }
+
+    .spacing-bar {
+      height: 8px;
+      background: var(--color-tertiary);
+      border-radius: 4px;
+      opacity: 0.6;
+    }
+
+    .spacing-label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--color-on-secondary);
+      min-width: 60px;
+    }
+
+    .spacing-px {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--color-on-secondary);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    /* ═══════════════════════════════════════════════
+       ROUNDED DEMO
+       ═══════════════════════════════════════════════ */
+    .rounded-demo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .rounded-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .rounded-box {
+      width: 48px;
+      height: 48px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-standard);
+    }
+
+    .rounded-label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--color-on-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       ELEVATION DEMO
+       ═══════════════════════════════════════════════ */
+    .elevation-demo {
+      display: flex;
+      gap: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .elevation-item {
+      padding: var(--space-lg);
+      border-radius: var(--rounded-xl);
+      border: 1px solid var(--color-border-standard);
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .elevation-item .elev-label {
+      font-size: 0.6875rem;
+      font-weight: 510;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-on-secondary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .elevation-item .elev-value {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--color-on-surface);
+    }
+
+    /* ═══════════════════════════════════════════════
+       CHART PLACEHOLDER
+       ═══════════════════════════════════════════════ */
+    .chart-area {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-standard);
+      border-radius: var(--rounded-xl);
+      padding: var(--space-lg);
+      min-height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 160px;
+      padding-top: var(--space-md);
+    }
+
+    .bar {
+      flex: 1;
+      background: var(--color-tertiary);
+      border-radius: 3px 3px 0 0;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      min-width: 20px;
+      position: relative;
+    }
+
+    .bar:hover {
+      opacity: 1;
+    }
+
+    .bar-label {
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.625rem;
+      font-weight: 510;
+      color: var(--color-on-secondary);
+      white-space: nowrap;
+    }
+
+    /* ═══════════════════════════════════════════════
+       DONUT CHART (CSS only)
+       ═══════════════════════════════════════════════ */
+    .donut-container {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+
+    .donut {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .donut-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 0.8125rem;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-label {
+      color: var(--color-on-surface);
+      flex: 1;
+    }
+
+    .legend-value {
+      font-family: var(--font-mono);
+      font-feature-settings: 'tnum';
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-on-primary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       DIALOG / MODAL
+       ═══════════════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border-standard);
+      border-radius: var(--rounded-2xl);
+      box-shadow: var(--shadow-modal);
+      width: 480px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--color-border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-body {
+      padding: var(--space-lg);
+    }
+
+    .modal-footer {
+      padding: var(--space-lg);
+      border-top: 1px solid var(--color-border-subtle);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-sm);
+    }
+
+    /* ═══════════════════════════════════════════════
+       DIVIDER
+       ═══════════════════════════════════════════════ */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border-subtle);
+      margin: var(--space-lg) 0;
+    }
+
+    /* ═══════════════════════════════════════════════
+       EXPENSE ROW ACTION
+       ═══════════════════════════════════════════════ */
+    .row-actions {
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    tbody tr:hover .row-actions {
+      opacity: 1;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .content { padding: var(--space-xl) var(--space-lg); }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .content { margin-left: 0; padding: var(--space-lg); }
+      .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       SCROLLBAR
+       ═══════════════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+    /* ═══════════════════════════════════════════════
+       MISC UTILITIES
+       ═══════════════════════════════════════════════ */
+    .text-gold { color: var(--color-tertiary); }
+    .text-success { color: var(--color-success); }
+    .text-danger { color: var(--color-danger); }
+    .text-warning { color: var(--color-warning); }
+    .text-info { color: var(--color-info); }
+    .text-muted { color: var(--color-on-secondary); }
+    .text-primary { color: var(--color-on-primary); }
+    .mt-sm { margin-top: var(--space-sm); }
+    .mt-md { margin-top: var(--space-md); }
+    .mb-sm { margin-bottom: var(--space-sm); }
+    .mb-md { margin-bottom: var(--space-md); }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- ═══════════════ SIDEBAR ═══════════════ -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">₱</div>
+        <span class="brand-name">Plutus</span>
+      </div>
+
+      <div class="nav-section-label">Overview</div>
+      <a class="nav-item active" href="#">
+        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12v1.5H2V3zm0 4h8v1.5H2V7zm0 4h10v1.5H2V11z"/></svg>
+        Expenses
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4v4.5l3 1.5"/></svg>
+        Recurring
+      </a>
+
+      <div class="nav-section-label">Analysis</div>
+      <a class="nav-item" href="#">
+        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 14h2V8H1v6zm4 0h2V5H5v9zm4 0h2V2H9v12zm4 0h2V6h-2v8z"/></svg>
+        Trends
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2a6 6 0 0 1 0 12" fill="currentColor"/></svg>
+        Categories
+      </a>
+
+      <div class="nav-section-label">Settings</div>
+      <a class="nav-item" href="#">
+        <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
+        Preferences
+      </a>
+    </aside>
+
+    <!-- ═══════════════ CONTENT ═══════════════ -->
+    <main class="content">
+
+      <!-- Page title -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h1 class="t-h1">Design System</h1>
+        <p class="t-body-sm text-muted mt-sm">Olympian dark-mode finance — where Hermes' precision meets Plutus' prosperity</p>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Colors
+           ═══════════════════════════════════════ -->
+      <section class="section" id="colors">
+        <div class="section-header">
+          <div class="t-label-caps">Foundations</div>
+          <h2 class="t-h2">Colors</h2>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Backgrounds</h3>
+          <div class="swatch-grid">
+            <div class="swatch">
+              <div class="swatch-color" style="background:#08090A"></div>
+              <div class="swatch-info"><div class="swatch-name">Primary</div><div class="swatch-value">#08090A</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#0F1011"></div>
+              <div class="swatch-info"><div class="swatch-name">Neutral</div><div class="swatch-value">#0F1011</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#16181B"></div>
+              <div class="swatch-info"><div class="swatch-name">Surface</div><div class="swatch-value">#16181B</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#1E2024"></div>
+              <div class="swatch-info"><div class="swatch-name">Elevated</div><div class="swatch-value">#1E2024</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Text</h3>
+          <div class="swatch-grid">
+            <div class="swatch">
+              <div class="swatch-color" style="background:#08090A; display:flex; align-items:center; justify-content:center; color:#F0F1F3; font-size:0.75rem; font-weight:510;">Aa</div>
+              <div class="swatch-info"><div class="swatch-name">On Primary</div><div class="swatch-value">#F0F1F3</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#08090A; display:flex; align-items:center; justify-content:center; color:#D0D6E0; font-size:0.75rem; font-weight:510;">Aa</div>
+              <div class="swatch-info"><div class="swatch-name">On Surface</div><div class="swatch-value">#D0D6E0</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#08090A; display:flex; align-items:center; justify-content:center; color:#8A8F98; font-size:0.75rem; font-weight:510;">Aa</div>
+              <div class="swatch-info"><div class="swatch-name">Secondary</div><div class="swatch-value">#8A8F98</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#08090A; display:flex; align-items:center; justify-content:center; color:#62666D; font-size:0.75rem; font-weight:510;">Aa</div>
+              <div class="swatch-info"><div class="swatch-name">On Secondary</div><div class="swatch-value">#62666D</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Accent — Gold</h3>
+          <div class="swatch-grid">
+            <div class="swatch">
+              <div class="swatch-color" style="background:#D4A843"></div>
+              <div class="swatch-info"><div class="swatch-name">Tertiary</div><div class="swatch-value">#D4A843</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#9E7B2D"></div>
+              <div class="swatch-info"><div class="swatch-name">Gold Dim</div><div class="swatch-value">#9E7B2D</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#F5D878"></div>
+              <div class="swatch-info"><div class="swatch-name">Gold Bright</div><div class="swatch-value">#F5D878</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Semantic</h3>
+          <div class="swatch-grid">
+            <div class="swatch">
+              <div class="swatch-color" style="background:#2DA44E"></div>
+              <div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-value">#2DA44E</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#E23B4A"></div>
+              <div class="swatch-info"><div class="swatch-name">Danger</div><div class="swatch-value">#E23B4A</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#D29922"></div>
+              <div class="swatch-info"><div class="swatch-name">Warning</div><div class="swatch-value">#D29922</div></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#58A6FF"></div>
+              <div class="swatch-info"><div class="swatch-name">Info</div><div class="swatch-value">#58A6FF</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Borders</h3>
+          <div class="flex-row">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+              <div style="width:120px; height:40px; border:1px solid rgba(255,255,255,0.05); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.6875rem; color:#62666D;">Subtle</div>
+              <span class="t-mono-caps">0.05</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+              <div style="width:120px; height:40px; border:1px solid rgba(255,255,255,0.08); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.6875rem; color:#62666D;">Standard</div>
+              <span class="t-mono-caps">0.08</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+              <div style="width:120px; height:40px; border:1px solid rgba(255,255,255,0.12); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.6875rem; color:#62666D;">Strong</div>
+              <span class="t-mono-caps">0.12</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Typography
+           ═══════════════════════════════════════ -->
+      <section class="section" id="typography">
+        <div class="section-header">
+          <div class="t-label-caps">Foundations</div>
+          <h2 class="t-h2">Typography</h2>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Inter — Primary Typeface</h3>
+          <div class="flex-col">
+            <div class="type-specimen">
+              <div class="t-display-xl">$4,280.50</div>
+              <div class="type-meta">display-xl · 4rem / 510 · -1.28px tracking · line-height 1.05</div>
+            </div>
+            <div class="type-specimen">
+              <div class="t-display">Monthly Spending</div>
+              <div class="type-meta">display · 2.5rem / 510 · -0.8px tracking · line-height 1.1</div>
+            </div>
+            <div class="type-specimen">
+              <div class="t-h1">Expense Dashboard</div>
+              <div class="type-meta">h1 · 1.75rem / 590 · -0.48px tracking · line-height 1.2</div>
+            </div>
+            <div class="type-specimen">
+              <div class="t-h2">Recent Transactions</div>
+              <div class="type-meta">h2 · 1.25rem / 510 · -0.2px tracking · line-height 1.3</div>
+            </div>
+            <div class="type-specimen">
+              <div class="t-h3">Category Breakdown</div>
+              <div class="type-meta">h3 · 1rem / 590 · -0.08px tracking · line-height 1.4</div>
+            </div>
+            <div class="type-specimen">
+              <div class="t-body-lg">The spending overview provides a comprehensive view of your financial activity across all tracked categories and merchants.</div>
+              <div class="type-meta">body-lg · 1rem / 400 · line-height 1.6</div>
+            </div>
+            <div class="type-specimen">
+              <div class="t-body-md">Grab ride to office — charged to Visa ending 4242. Category: Transport.</div>
+              <div class="type-meta">body-md · 0.875rem / 400 · line-height 1.55</div>
+            </div>
+            <div class="type-specimen">
+              <div class="t-body-sm">Auto-categorized based on merchant history. 12 similar entries this month.</div>
+              <div class="type-meta">body-sm · 0.8125rem / 400 · line-height 1.5</div>
+            </div>
+            <div class="type-specimen">
+              <div class="t-label-caps">Total Spending This Month</div>
+              <div class="type-meta">label-caps · 0.6875rem / 510 · 0.06em tracking · uppercase</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">JetBrains Mono — Financial Figures</h3>
+          <div class="flex-col">
+            <div class="type-specimen">
+              <div class="t-mono-value">$1,234.56 &nbsp; $789.00 &nbsp; $42.50 &nbsp; $9,876.00</div>
+              <div class="type-meta">mono-value · 0.875rem / 500 · tnum · financial amounts</div>
+            </div>
+            <div class="type-specimen">
+              <div class="t-mono-caps">SGD &nbsp; USD &nbsp; EUR &nbsp; GBP</div>
+              <div class="type-meta">mono-caps · 0.6875rem / 500 · 0.05em tracking · currency codes</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Spacing
+           ═══════════════════════════════════════ -->
+      <section class="section" id="spacing">
+        <div class="section-header">
+          <div class="t-label-caps">Foundations</div>
+          <h2 class="t-h2">Spacing & Radius</h2>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Spacing Scale (8px base)</h3>
+          <div class="flex-col" style="gap: 10px;">
+            <div class="spacing-demo">
+              <span class="spacing-label">xs</span>
+              <div class="spacing-bar" style="width:4px"></div>
+              <span class="spacing-px">4px</span>
+            </div>
+            <div class="spacing-demo">
+              <span class="spacing-label">sm</span>
+              <div class="spacing-bar" style="width:8px"></div>
+              <span class="spacing-px">8px</span>
+            </div>
+            <div class="spacing-demo">
+              <span class="spacing-label">md</span>
+              <div class="spacing-bar" style="width:16px"></div>
+              <span class="spacing-px">16px</span>
+            </div>
+            <div class="spacing-demo">
+              <span class="spacing-label">lg</span>
+              <div class="spacing-bar" style="width:24px"></div>
+              <span class="spacing-px">24px</span>
+            </div>
+            <div class="spacing-demo">
+              <span class="spacing-label">xl</span>
+              <div class="spacing-bar" style="width:32px"></div>
+              <span class="spacing-px">32px</span>
+            </div>
+            <div class="spacing-demo">
+              <span class="spacing-label">2xl</span>
+              <div class="spacing-bar" style="width:48px"></div>
+              <span class="spacing-px">48px</span>
+            </div>
+            <div class="spacing-demo">
+              <span class="spacing-label">3xl</span>
+              <div class="spacing-bar" style="width:64px"></div>
+              <span class="spacing-px">64px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Border Radius</h3>
+          <div class="rounded-demo">
+            <div class="rounded-item">
+              <div class="rounded-box" style="border-radius:2px"></div>
+              <span class="rounded-label">xs · 2</span>
+            </div>
+            <div class="rounded-item">
+              <div class="rounded-box" style="border-radius:4px"></div>
+              <span class="rounded-label">sm · 4</span>
+            </div>
+            <div class="rounded-item">
+              <div class="rounded-box" style="border-radius:6px"></div>
+              <span class="rounded-label">md · 6</span>
+            </div>
+            <div class="rounded-item">
+              <div class="rounded-box" style="border-radius:8px"></div>
+              <span class="rounded-label">lg · 8</span>
+            </div>
+            <div class="rounded-item">
+              <div class="rounded-box" style="border-radius:12px"></div>
+              <span class="rounded-label">xl · 12</span>
+            </div>
+            <div class="rounded-item">
+              <div class="rounded-box" style="border-radius:16px"></div>
+              <span class="rounded-label">2xl · 16</span>
+            </div>
+            <div class="rounded-item">
+              <div class="rounded-box" style="border-radius:9999px"></div>
+              <span class="rounded-label">full</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Elevation
+           ═══════════════════════════════════════ -->
+      <section class="section" id="elevation">
+        <div class="section-header">
+          <div class="t-label-caps">Foundations</div>
+          <h2 class="t-h2">Elevation & Depth</h2>
+        </div>
+
+        <div class="elevation-demo">
+          <div class="elevation-item" style="background:#08090A">
+            <div class="elev-label">Base</div>
+            <div class="elev-value">#08090A</div>
+          </div>
+          <div class="elevation-item" style="background:#0F1011">
+            <div class="elev-label">Panel</div>
+            <div class="elev-value">#0F1011</div>
+          </div>
+          <div class="elevation-item" style="background:#16181B">
+            <div class="elev-label">Surface</div>
+            <div class="elev-value">#16181B</div>
+          </div>
+          <div class="elevation-item" style="background:#1E2024">
+            <div class="elev-label">Elevated</div>
+            <div class="elev-value">#1E2024</div>
+          </div>
+        </div>
+        <p class="t-body-sm text-muted mt-md">Depth is communicated through luminance stepping, not shadows. Floating elements only: <code style="font-family:var(--font-mono); font-size:0.8125rem; color:var(--color-tertiary);">rgba(0,0,0,0.3) 0 4px 16px</code></p>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Components — Buttons
+           ═══════════════════════════════════════ -->
+      <section class="section" id="buttons">
+        <div class="section-header">
+          <div class="t-label-caps">Components</div>
+          <h2 class="t-h2">Buttons</h2>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Variants</h3>
+          <div class="flex-row">
+            <button class="btn btn-primary">Add Expense</button>
+            <button class="btn btn-secondary">Filter</button>
+            <button class="btn btn-ghost">View All</button>
+            <button class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Sizes</h3>
+          <div class="flex-row">
+            <button class="btn btn-primary">Default</button>
+            <button class="btn btn-primary btn-sm">Small</button>
+            <button class="btn btn-secondary btn-icon" title="Settings">⚙</button>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">With Badges</h3>
+          <div class="flex-row">
+            <button class="btn btn-primary">Save <span class="badge badge-gold" style="background:rgba(8,9,10,0.2); color:inherit; font-size:0.6875rem; padding:1px 6px;">3</span></button>
+            <button class="btn btn-secondary">Export <span style="font-size:0.75rem;">↓</span></button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Components — Badges
+           ═══════════════════════════════════════ -->
+      <section class="section" id="badges">
+        <div class="section-header">
+          <div class="t-label-caps">Components</div>
+          <h2 class="t-h2">Badges</h2>
+        </div>
+
+        <div class="flex-row">
+          <span class="badge badge-gold">Transport</span>
+          <span class="badge badge-gold">Food</span>
+          <span class="badge badge-gold">Shopping</span>
+          <span class="badge badge-success">Under Budget</span>
+          <span class="badge badge-danger">Over Budget</span>
+          <span class="badge badge-warning">Approaching</span>
+          <span class="badge badge-info">New Merchant</span>
+          <span class="badge badge-neutral">Recurring</span>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Components — Inputs
+           ═══════════════════════════════════════ -->
+      <section class="section" id="inputs">
+        <div class="section-header">
+          <div class="t-label-caps">Components</div>
+          <h2 class="t-h2">Inputs</h2>
+        </div>
+
+        <div class="grid-2">
+          <div class="input-group">
+            <label class="input-label">Merchant</label>
+            <input type="text" class="input" placeholder="e.g. Grab, FairPrice">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Amount</label>
+            <input type="text" class="input" placeholder="0.00" style="font-family:var(--font-mono); font-feature-settings:'tnum';">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Category</label>
+            <select class="input">
+              <option>Select category</option>
+              <option>Food</option>
+              <option>Transport</option>
+              <option>Shopping</option>
+              <option>Entertainment</option>
+              <option>Bills</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Date</label>
+            <input type="date" class="input" value="2026-04-25">
+            <span class="input-hint">Defaults to today</span>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Components — Cards
+           ═══════════════════════════════════════ -->
+      <section class="section" id="cards">
+        <div class="section-header">
+          <div class="t-label-caps">Components</div>
+          <h2 class="t-h2">Cards</h2>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Stat Cards</h3>
+          <div class="grid-4">
+            <div class="stat-card">
+              <div class="stat-label">Total Spent</div>
+              <div class="stat-value">$4,280</div>
+              <div class="stat-change negative">↑ 12% vs last month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Transactions</div>
+              <div class="stat-value">47</div>
+              <div class="stat-change neutral">— same as last month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Daily Average</div>
+              <div class="stat-value">$170</div>
+              <div class="stat-change positive">↓ 8% vs last month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Top Category</div>
+              <div class="stat-value" style="font-family:var(--font-sans); font-size:1.25rem; font-weight:510;">Food</div>
+              <div class="stat-change neutral">32% of total</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Content Cards</h3>
+          <div class="grid-2">
+            <div class="card">
+              <div class="t-label-caps mb-sm">Budget Status</div>
+              <div class="t-h2 text-gold mb-sm">73% Used</div>
+              <div style="background:rgba(255,255,255,0.05); border-radius:4px; height:6px; overflow:hidden;">
+                <div style="background:var(--color-tertiary); height:100%; width:73%; border-radius:4px;"></div>
+              </div>
+              <div class="t-body-sm text-muted mt-sm">$3,180 of $5,000 monthly budget</div>
+            </div>
+            <div class="card">
+              <div class="t-label-caps mb-sm">Savings Rate</div>
+              <div class="t-h2 text-success mb-sm">+18%</div>
+              <div style="background:rgba(255,255,255,0.05); border-radius:4px; height:6px; overflow:hidden;">
+                <div style="background:var(--color-success); height:100%; width:18%; border-radius:4px;"></div>
+              </div>
+              <div class="t-body-sm text-muted mt-sm">Saving $920 this month from $5,100 income</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="t-h3 mb-md">Card vs Elevated Card</h3>
+          <div class="grid-2">
+            <div class="card">
+              <div class="t-label-caps mb-sm">Surface</div>
+              <div class="t-body-sm">Default card — <code style="font-family:var(--font-mono); font-size:0.75rem; color:var(--color-tertiary);">#16181B</code></div>
+            </div>
+            <div class="card-elevated">
+              <div class="t-label-caps mb-sm">Elevated</div>
+              <div class="t-body-sm">Modal/dropdown — <code style="font-family:var(--font-mono); font-size:0.75rem; color:var(--color-tertiary);">#1E2024</code></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Components — Table
+           ═══════════════════════════════════════ -->
+      <section class="section" id="table">
+        <div class="section-header">
+          <div class="t-label-caps">Components</div>
+          <h2 class="t-h2">Expense Table</h2>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Merchant</th>
+                <th>Category</th>
+                <th class="right">Amount</th>
+                <th style="width:80px"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">2026-04-25</td>
+                <td>Grab</td>
+                <td><span class="badge badge-gold">Transport</span></td>
+                <td class="right">$18.50</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Edit">✎</button>
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Delete" style="color:var(--color-danger);">✕</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="mono">2026-04-25</td>
+                <td>FairPrice</td>
+                <td><span class="badge badge-gold">Food</span></td>
+                <td class="right">$42.80</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Edit">✎</button>
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Delete" style="color:var(--color-danger);">✕</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="mono">2026-04-24</td>
+                <td>Netflix</td>
+                <td><span class="badge badge-neutral">Subscription</span></td>
+                <td class="right">$17.98</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Edit">✎</button>
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Delete" style="color:var(--color-danger);">✕</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="mono">2026-04-24</td>
+                <td>Uniqlo</td>
+                <td><span class="badge badge-gold">Shopping</span></td>
+                <td class="right">$89.00</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Edit">✎</button>
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Delete" style="color:var(--color-danger);">✕</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="mono">2026-04-23</td>
+                <td>Starbucks</td>
+                <td><span class="badge badge-gold">Food</span></td>
+                <td class="right">$7.90</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Edit">✎</button>
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Delete" style="color:var(--color-danger);">✕</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="mono">2026-04-23</td>
+                <td>SP Utilities</td>
+                <td><span class="badge badge-neutral">Bills</span></td>
+                <td class="right">$156.40</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Edit">✎</button>
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Delete" style="color:var(--color-danger);">✕</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="t-body-sm text-muted mt-sm">Row actions appear on hover. No zebra striping — the dark canvas provides separation.</p>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Charts
+           ═══════════════════════════════════════ -->
+      <section class="section" id="charts">
+        <div class="section-header">
+          <div class="t-label-caps">Patterns</div>
+          <h2 class="t-h2">Data Visualization</h2>
+        </div>
+
+        <div class="grid-2">
+          <div class="chart-area">
+            <div class="t-label-caps mb-md">Spending by Day — April 2026</div>
+            <div class="bar-chart" style="margin-bottom:24px;">
+              <div class="bar" style="height:40%"><span class="bar-label">W1</span></div>
+              <div class="bar" style="height:65%"><span class="bar-label">W2</span></div>
+              <div class="bar" style="height:55%"><span class="bar-label">W3</span></div>
+              <div class="bar" style="height:80%; opacity:1;"><span class="bar-label">W4</span></div>
+            </div>
+          </div>
+
+          <div class="chart-area">
+            <div class="t-label-caps mb-md">Category Breakdown</div>
+            <div class="donut-container">
+              <div class="donut" style="background: conic-gradient(
+                #D4A843 0deg 115deg,
+                rgba(212,168,67,0.6) 115deg 187deg,
+                rgba(212,168,67,0.4) 187deg 252deg,
+                rgba(212,168,67,0.25) 252deg 310deg,
+                rgba(212,168,67,0.12) 310deg 360deg
+              );">
+                <div class="donut-center" style="width:80px; height:80px; background:var(--color-surface); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                  <div style="font-family:var(--font-mono); font-feature-settings:'tnum'; font-size:0.875rem; font-weight:500; color:var(--color-on-primary);">$4.2k</div>
+                  <div style="font-size:0.625rem; color:var(--color-on-secondary);">Total</div>
+                </div>
+              </div>
+              <div class="donut-legend">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:#D4A843"></div>
+                  <span class="legend-label">Food</span>
+                  <span class="legend-value">$1,369</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:rgba(212,168,67,0.6)"></div>
+                  <span class="legend-label">Transport</span>
+                  <span class="legend-value">$853</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:rgba(212,168,67,0.4)"></div>
+                  <span class="legend-label">Shopping</span>
+                  <span class="legend-value">$768</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:rgba(212,168,67,0.25)"></div>
+                  <span class="legend-label">Bills</span>
+                  <span class="legend-value">$675</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:rgba(212,168,67,0.12)"></div>
+                  <span class="legend-label">Other</span>
+                  <span class="legend-value">$615</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="t-body-sm text-muted mt-md">All chart elements use the gold palette at varying opacities — no secondary chromatic colors in data visualization. The monochromatic approach maintains visual coherence with the broader system.</p>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Modal
+           ═══════════════════════════════════════ -->
+      <section class="section" id="modal">
+        <div class="section-header">
+          <div class="t-label-caps">Patterns</div>
+          <h2 class="t-h2">Modal / Add Expense</h2>
+        </div>
+
+        <button class="btn btn-primary" onclick="document.getElementById('expenseModal').classList.add('open')">Open Add Expense Modal</button>
+
+        <p class="t-body-sm text-muted mt-md">Elevated surface (<code style="font-family:var(--font-mono); font-size:0.75rem; color:var(--color-tertiary);">#1E2024</code>) with gold focus rings on inputs.</p>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════
+           SECTION: Do's and Don'ts
+           ═══════════════════════════════════════ -->
+      <section class="section" id="guidelines">
+        <div class="section-header">
+          <div class="t-label-caps">Guidelines</div>
+          <h2 class="t-h2">Do's and Don'ts</h2>
+        </div>
+
+        <div class="grid-2">
+          <div class="card" style="border-left: 3px solid var(--color-success);">
+            <div class="t-h3 text-success mb-sm">Do</div>
+            <ul class="t-body-sm" style="padding-left:18px; display:flex; flex-direction:column; gap:6px;">
+              <li>Use Inter with <code style="font-family:var(--font-mono); font-size:0.75rem;">cv01</code> and <code style="font-family:var(--font-mono); font-size:0.75rem;">ss03</code> on all text</li>
+              <li>Use JetBrains Mono for all financial amounts with <code style="font-family:var(--font-mono); font-size:0.75rem;">tnum</code></li>
+              <li>Use weight 510 as default emphasis</li>
+              <li>Use gold as the sole chromatic accent</li>
+              <li>Use luminance stepping for depth</li>
+              <li>Use semi-transparent white borders</li>
+              <li>Use gold focus ring for keyboard accessibility</li>
+            </ul>
+          </div>
+          <div class="card" style="border-left: 3px solid var(--color-danger);">
+            <div class="t-h3 text-danger mb-sm">Don't</div>
+            <ul class="t-body-sm" style="padding-left:18px; display:flex; flex-direction:column; gap:6px;">
+              <li>Use pure white (<code style="font-family:var(--font-mono); font-size:0.75rem;">#FFF</code>) as primary text</li>
+              <li>Use heavy shadows for elevation</li>
+              <li>Apply gold decoratively</li>
+              <li>Use positive letter-spacing on display text</li>
+              <li>Use weight 700 (bold) — maximum is 590</li>
+              <li>Introduce additional chromatic colors</li>
+              <li>Use zebra striping in tables</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ═══════════════ MODAL ═══════════════ -->
+  <div class="modal-overlay" id="expenseModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="t-h3" style="margin:0;">Add Expense</h3>
+        <button class="btn btn-ghost btn-icon" onclick="document.getElementById('expenseModal').classList.remove('open')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="flex-col" style="gap: var(--space-md);">
+          <div class="input-group">
+            <label class="input-label">Merchant</label>
+            <input type="text" class="input" placeholder="e.g. Grab, FairPrice">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-md);">
+            <div class="input-group">
+              <label class="input-label">Amount</label>
+              <input type="text" class="input" placeholder="0.00" style="font-family:var(--font-mono); font-feature-settings:'tnum';">
+            </div>
+            <div class="input-group">
+              <label class="input-label">Currency</label>
+              <select class="input">
+                <option>SGD</option>
+                <option>USD</option>
+                <option>EUR</option>
+                <option>GBP</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-md);">
+            <div class="input-group">
+              <label class="input-label">Category</label>
+              <select class="input">
+                <option>Select category</option>
+                <option>Food</option>
+                <option>Transport</option>
+                <option>Shopping</option>
+                <option>Entertainment</option>
+                <option>Bills</option>
+                <option>Subscription</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Date</label>
+              <input type="date" class="input" value="2026-04-25">
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Notes <span style="font-weight:400; color:var(--color-on-secondary);">(optional)</span></label>
+            <input type="text" class="input" placeholder="Any additional details">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('expenseModal').classList.remove('open')">Cancel</button>
+        <button class="btn btn-primary" onclick="document.getElementById('expenseModal').classList.remove('open')">Add Expense</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
