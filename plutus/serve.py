@@ -1,5 +1,6 @@
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 
 import typer
@@ -25,22 +26,38 @@ def serve(
         raise typer.Exit(1)
 
     web_dir = Path(__file__).parent / "web"
-    try:
-        subprocess.run(["npm", "ci"], cwd=str(web_dir), check=True)
-    except subprocess.CalledProcessError:
-        typer.echo("Error: npm ci failed.", err=True)
-        raise typer.Exit(1)
 
-    try:
-        subprocess.run(["npm", "run", "build"], cwd=str(web_dir), check=True)
-    except subprocess.CalledProcessError:
-        typer.echo("Error: React app build failed.", err=True)
-        raise typer.Exit(1)
+    with tempfile.TemporaryDirectory(prefix="plutus-web-") as tmp:
+        tmp_web = Path(tmp) / "web"
+        try:
+            shutil.copytree(
+                web_dir,
+                tmp_web,
+                ignore=shutil.ignore_patterns("node_modules", "dist", "dist-ssr"),
+            )
+        except Exception:
+            typer.echo("Error: failed to prepare build directory.", err=True)
+            raise typer.Exit(1)
 
-    dist = web_dir / "dist"
-    if dist.is_dir():
+        try:
+            subprocess.run(["npm", "ci"], cwd=str(tmp_web), check=True)
+        except subprocess.CalledProcessError:
+            typer.echo("Error: npm ci failed.", err=True)
+            raise typer.Exit(1)
+
+        try:
+            subprocess.run(["npm", "run", "build"], cwd=str(tmp_web), check=True)
+        except subprocess.CalledProcessError:
+            typer.echo("Error: React app build failed.", err=True)
+            raise typer.Exit(1)
+
+        dist = tmp_web / "dist"
+        if not dist.is_dir():
+            typer.echo("Error: build did not produce a dist directory.", err=True)
+            raise typer.Exit(1)
+
         fastapi_app.mount("/", StaticFiles(directory=str(dist), html=True), name="static")
 
-    import uvicorn
+        import uvicorn
 
-    uvicorn.run(fastapi_app, host=host, port=port)
+        uvicorn.run(fastapi_app, host=host, port=port)
